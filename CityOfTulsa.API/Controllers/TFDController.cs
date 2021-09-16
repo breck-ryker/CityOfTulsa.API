@@ -14,48 +14,93 @@ namespace CityOfTulsaAPI.Controllers {
    [ApiController]
    public class TFDController : ControllerBase {
 
-      private readonly DatabaseContext _context;
+      private readonly DatabaseContext _dbcontext;
 
-      public TFDController(DatabaseContext context) {
-         _context = context;
+      public TFDController(DatabaseContext dbcontext) {
+         _dbcontext = dbcontext;
       }
 
       [HttpGet]
       public IEnumerable<FireEventHelper> Get() {
          
-         // just return the last 7 days' data.
-
-         return _context.FireEvents
-            .Where(e => e.ResponseDate >= DateTime.Now.AddDays(-7))
+         // just return the most recent n records
+         return _dbcontext.FireEvents
+            //.Where(e => e.ResponseDate >= DateTime.Now.AddDays(-7))
             .Include(e => e.FireVehicles)
             .Select(e => new FireEventHelper(e))
+            .OrderByDescending(e => e.ResponseDate)
+            .Take(1000)
             ;
       }
 
-      // GET api/<TFDController>/5
+      // GET <TFDController>/5 -or- /TFD2021000053922
       [HttpGet("{id}")]
-      public IEnumerable<FireEventHelper> Get(string id) {
+      // [Route("{id:alpha:minlength(1):maxlength(16)}")] // swagger hates this
+      public FireEventHelper? Get(string id) {
 
-         return _context.FireEvents
+         return _dbcontext.FireEvents
             .Where(e => e.FireEventID.ToString() == id || e.IncidentNumber == id)
             .Include(e => e.FireVehicles)
             .Select(e => new FireEventHelper(e))
+            .FirstOrDefault()
             ;
       }
 
-      // POST api/<TFDController>
-      [HttpPost]
-      public void Post([FromBody] string value) {
+      [HttpGet("dates")]
+      public IEnumerable<FireEventHelper> Get(string? mindate = null, string? maxdate = null) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+
+         return _dbcontext.FireEvents
+            .Where(e => 
+               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin) 
+               && 
+               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+            )
+            .Include(e => e.FireVehicles)
+            .Select(e => new FireEventHelper(e))
+            .OrderBy(e => e.ResponseDate)
+            .Take(1000)
+            ;
       }
 
-      // PUT api/<TFDController>/5
-      [HttpPut("{id}")]
-      public void Put(int id, [FromBody] string value) {
-      }
+      [HttpGet("problems")]
+      public IEnumerable<string> Get(
+         string? mindate = null, 
+         string? maxdate = null,
+         string? divisions = null,
+         string? stations = null,
+         string? vehicles = null
+      ) {
 
-      // DELETE api/<TFDController>/5
-      [HttpDelete("{id}")]
-      public void Delete(int id) {
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
+         List<string> listStations = (string.IsNullOrWhiteSpace(stations) ? new List<string>() : stations.Split(',').ToList());
+         List<string> listVehicles = (string.IsNullOrWhiteSpace(vehicles) ? new List<string>() : vehicles.Split(',').ToList());
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin)
+               &&
+               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+            )
+            .Include(e => e.FireVehicles)
+            .Where(e =>
+               e.FireVehicles
+               .Where(v =>
+                  (listDivisions.Count == 0 || listDivisions.Contains(v.Division))
+                  &&
+                  (listStations.Count == 0 || listStations.Contains(v.Station))
+                  &&
+                  (listVehicles.Count == 0 || listVehicles.Contains(v.FireVehicleID.ToString()) || listVehicles.Contains(v.VehicleID))
+               ).Any()
+            )
+            .Select(e => e.Problem)
+            .Distinct()
+            .Take(1000)
+            ;
       }
    }
 }

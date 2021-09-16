@@ -16,7 +16,7 @@ namespace CityOfTulsaData {
       public decimal Longitude { get; set; }
       public DateTime DateLastUpdated { get; set; }
 
-      public virtual ICollection<FireVehicle> FireVehicles { get; set; }  // private set
+      public List<FireVehicle> FireVehicles { get; set; }  // private set
    }
 
    public class FireVehicle {
@@ -28,7 +28,7 @@ namespace CityOfTulsaData {
       public string VehicleID { get; set; }
       public DateTime DateLastUpdated { get; set; }
       
-      public virtual ICollection<FireEvent> FireEvents { get; set; }  // private set
+      public List<FireEvent> FireEvents { get; set; }  // private set
    }
 
    public class FireEventVehicle {
@@ -41,8 +41,8 @@ namespace CityOfTulsaData {
 
       //relationships
 
-      public virtual FireEvent FireEvent { get; set; }  // private set
-      public virtual FireVehicle FireVehicle { get; set; }  // private set
+      public FireEvent FireEvent { get; set; }  // private set
+      public FireVehicle FireVehicle { get; set; }  // private set
    }
 
    public class FireEventHelper {
