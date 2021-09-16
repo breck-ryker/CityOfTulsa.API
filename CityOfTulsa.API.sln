@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityOfTulsa.API", "CityOfTulsa.API\CityOfTulsa.API.csproj", "{5EA0E3CF-7915-4540-B165-638A5781A8B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityOfTulsa.Data", "CityOfTulsa.Data\CityOfTulsa.Data.csproj", "{6C1F9734-65F3-4F65-84FE-66AAD514B958}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5EA0E3CF-7915-4540-B165-638A5781A8B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA0E3CF-7915-4540-B165-638A5781A8B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA0E3CF-7915-4540-B165-638A5781A8B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA0E3CF-7915-4540-B165-638A5781A8B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A0A377F-8BC5-44EB-9876-96DF2B29D0EA}
+	EndGlobalSection
+EndGlobal
