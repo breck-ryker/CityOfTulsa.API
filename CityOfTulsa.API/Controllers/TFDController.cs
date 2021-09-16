@@ -20,10 +20,11 @@ namespace CityOfTulsaAPI.Controllers {
          _context = context;
       }
 
-      // GET: api/<TFDController>
       [HttpGet]
       public IEnumerable<FireEventHelper> Get() {
          
+         // just return the last 7 days' data.
+
          return _context.FireEvents
             .Where(e => e.ResponseDate >= DateTime.Now.AddDays(-7))
             .Include(e => e.FireVehicles)
@@ -33,8 +34,13 @@ namespace CityOfTulsaAPI.Controllers {
 
       // GET api/<TFDController>/5
       [HttpGet("{id}")]
-      public string Get(int id) {
-         return "value";
+      public IEnumerable<FireEventHelper> Get(string id) {
+
+         return _context.FireEvents
+            .Where(e => e.FireEventID.ToString() == id || e.IncidentNumber == id)
+            .Include(e => e.FireVehicles)
+            .Select(e => new FireEventHelper(e))
+            ;
       }
 
       // POST api/<TFDController>
