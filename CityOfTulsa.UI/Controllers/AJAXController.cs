@@ -19,8 +19,7 @@ namespace CityOfTulsaUI.Controllers {
       ) {
 
          AJAXPayload ajaxPayload = new AJAXPayload(ajaxMessage);
-         UserModel userModel = null;
-         //UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
+         UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
          
          if (userModel == null) {
             userModel = new UserModel();
@@ -65,7 +64,7 @@ namespace CityOfTulsaUI.Controllers {
             ajaxPayload.msg = ex.ToString();
          }
 
-         //HttpContext.Session.Set<UserModel>("UserModel", userModel);
+         HttpContext.Session.Set("UserModel", userModel);
 
          JsonResult jsonResult = new JsonResult(
             JsonConvert.SerializeObject(ajaxPayload)

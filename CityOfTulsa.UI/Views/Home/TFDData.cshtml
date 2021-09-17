@@ -27,7 +27,7 @@
    <div class="col-sm-12 d-flex">
 
       <div class="form-check float-sm-left align-self-center d-flex mr-3">
-         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions">
+         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions" @((Model.TFDDateFilterType == DateFilterType.None ? "" : "checked"))>
          <label class="form-check-label align-self-center font-weight-bold" for="show_dateoptions" id="label_showdateoptions">
             Filter by response date
          </label>
@@ -39,15 +39,15 @@
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" checked> On
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "active" : ""))>
+         <label class="btn btn-outline-secondary btn-sm @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_after" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.AfterDate)"> After
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "active" : ""))>
+         <label class="btn btn-outline-secondary btn-sm @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_before" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BeforeDate)"> Before
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "active" : ""))>
+         <label class="btn btn-outline-secondary btn-sm @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_between" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BetweenDates)"> Between
          </label>
       </div>

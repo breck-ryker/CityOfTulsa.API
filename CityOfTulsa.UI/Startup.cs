@@ -27,6 +27,13 @@ namespace CityOfTulsa.UI {
             .AddRazorRuntimeCompilation()
             .AddNewtonsoftJson()
             ;
+
+         services
+            .AddMvc()
+            .AddSessionStateTempDataProvider()
+            ;
+            
+         services.AddSession();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +56,9 @@ namespace CityOfTulsa.UI {
 
          app.UseAuthorization();
 
-         //app.UseSession();
+         app.UseSession();
+
+         //app.UseMvcWithDefaultRoute();
 
          app.UseEndpoints(endpoints => {
             endpoints.MapControllerRoute(

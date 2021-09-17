@@ -1,4 +1,5 @@
-﻿using CityOfTulsaUI.Models;
+﻿using CityOfTulsaUI.Classes;
+using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -27,7 +28,15 @@ namespace CityOfTulsaUI.Controllers {
       }
 
       public IActionResult TFDData() {
-         UserModel userModel = new UserModel();
+
+         UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (userModel == null) {
+            userModel = new UserModel();
+         }
+
+         HttpContext.Session.Set("UserModel", userModel);
+
          return View(userModel);
       }
 
