@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityOfTulsa.API", "CityOfTu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityOfTulsa.Data", "CityOfTulsa.Data\CityOfTulsa.Data.csproj", "{6C1F9734-65F3-4F65-84FE-66AAD514B958}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityOfTulsa.UI", "CityOfTulsa.UI\CityOfTulsa.UI.csproj", "{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C1F9734-65F3-4F65-84FE-66AAD514B958}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

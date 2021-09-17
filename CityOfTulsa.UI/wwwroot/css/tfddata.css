@@ -1,0 +1,13 @@
+﻿
+.navbar-nav li.nav-item[data-pagekey="tfddata"] {
+   border-bottom: 4px solid orange;
+}
+
+#show_dateoptions {
+   width:20px;
+   height:20px;
+}
+
+#label_showdateoptions {
+   padding-left:12px;
+}
