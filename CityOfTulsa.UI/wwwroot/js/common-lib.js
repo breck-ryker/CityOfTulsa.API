@@ -206,15 +206,15 @@ function GetQueryStringParm(parmName) {
 
 function GetURLParts(bIncludeQueryString) {
 
-   var sURL = window.location.href;
+   var url = window.location.href;
 
-   sURL = ReplaceAll(sURL, '://', '/');
-   sURL = ReplaceAll(sURL, ' ', '');
-   sURL = ReplaceAll(sURL, ':', '_');
+   url = ReplaceAll(url, '://', '/');
+   url = ReplaceAll(url, ' ', '');
+   url = ReplaceAll(url, ':', '_');
 
    var sNewURL = '';
    var sQueryString = '';
-   var sURLParts = sURL.split('/');
+   var sURLParts = url.split('/');
    var sSubParts;
 
    for (var i = 0; i < sURLParts.length; i++) {

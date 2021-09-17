@@ -27,7 +27,8 @@ namespace CityOfTulsaUI.Controllers {
       }
 
       public IActionResult TFDData() {
-         return View();
+         UserModel userModel = new UserModel();
+         return View(userModel);
       }
 
       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

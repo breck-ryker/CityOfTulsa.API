@@ -79,3 +79,11 @@ ul.navbar-nav li.nav-item {
    border-top: 4px solid transparent;
    border-bottom: 4px solid transparent;
 }
+
+.cotHidden {
+   display:none;
+}
+
+#rowDateOptions {
+   min-height:32px;
+}

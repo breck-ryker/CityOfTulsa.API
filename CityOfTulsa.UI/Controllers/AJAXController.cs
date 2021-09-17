@@ -1,4 +1,5 @@
 ﻿using CityOfTulsaUI.Classes;
+using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -18,6 +19,12 @@ namespace CityOfTulsaUI.Controllers {
       ) {
 
          AJAXPayload ajaxPayload = new AJAXPayload(ajaxMessage);
+         UserModel userModel = null;
+         //UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
+         
+         if (userModel == null) {
+            userModel = new UserModel();
+         }
 
          try {
 
@@ -25,11 +32,27 @@ namespace CityOfTulsaUI.Controllers {
 
             switch ((ajaxMessage.cmd ?? "").Trim().ToLower()) {
 
-               case "mindate_set":
+               case "tfd.set-mindate":
 
                   break;
 
-               case "maxdate_set":
+               case "tfd.set-maxdate":
+
+                  break;
+
+               case "tfd.show-dateoptions":
+
+                  userModel.UseTFDDateFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
+
+                  if (!(userModel.UseTFDDateFilter)) {
+                     userModel.TFDDateFilterType = DateFilterType.None;
+                  }
+
+                  break;
+
+               case "tfd.set-dateoption":
+
+                  userModel.TFDDateFilterType = (DateFilterType)ajaxMessage.data.ToInteger();
 
                   break;
             }
@@ -41,6 +64,8 @@ namespace CityOfTulsaUI.Controllers {
             ajaxPayload.value = (-1).ToString();
             ajaxPayload.msg = ex.ToString();
          }
+
+         //HttpContext.Session.Set<UserModel>("UserModel", userModel);
 
          JsonResult jsonResult = new JsonResult(
             JsonConvert.SerializeObject(ajaxPayload)

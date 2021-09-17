@@ -1,6 +1,10 @@
-﻿@{
+﻿
+@model CityOfTulsaUI.Models.UserModel
+
+@{
    ViewData["Title"] = "Tulsa Fire Department: Dispatch Data";
 }
+
 <h4>@ViewData["Title"]</h4>
 
 @section Styles
@@ -18,38 +22,38 @@
    <script src="@Url.Content("/lib/mdb-datepicker/js/mdb.min.js")"></script>
 }
 
-<div class="row mt-4">
+<div class="row mt-4" id="rowDateOptions">
 
    <div class="col-sm-12 d-flex">
 
       <div class="form-check float-sm-left align-self-center d-flex mr-3">
-         <input class="form-check-input align-self-center" type="checkbox" value="" id="show_dateoptions">
+         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions">
          <label class="form-check-label align-self-center font-weight-bold" for="show_dateoptions" id="label_showdateoptions">
             Filter by response date
          </label>
       </div>
 
-      <div class="btn-group btn-group-toggle float-sm-left align-self-center" data-toggle="buttons">
+      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.TFDDateFilterType == DateFilterType.None ? "cotHidden" : "")" data-toggle="buttons">
 
-         <label class="btn btn-outline-secondary btn-sm active">
-            <input type="radio" name="dateoptions" id="date_on" autocomplete="off" checked> On
+         <label class="btn btn-outline-secondary btn-sm @((Model.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
+            <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" checked> On
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm">
-            <input type="radio" name="dateoptions" id="date_after" autocomplete="off"> After
+         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "active" : ""))>
+            <input type="radio" name="dateoptions" id="date_after" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.AfterDate)"> After
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm">
-            <input type="radio" name="dateoptions" id="date_before" autocomplete="off"> Before
+         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "active" : ""))>
+            <input type="radio" name="dateoptions" id="date_before" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BeforeDate)"> Before
          </label>
 
-         <label class="btn btn-outline-secondary btn-sm">
-            <input type="radio" name="dateoptions" id="date_between" autocomplete="off"> Between
+         <label class="btn btn-outline-secondary btn-sm" @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "active" : ""))>
+            <input type="radio" name="dateoptions" id="date_between" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BetweenDates)"> Between
          </label>
       </div>
    </div>
 </div>
-<div class="row" id="rowDates">
+<div class="row @((Model.TFDDateFilterType == DateFilterType.None ? "cotHidden" : ""))" id="rowDates">
    <div class="col-sm-6">
 
    </div>
