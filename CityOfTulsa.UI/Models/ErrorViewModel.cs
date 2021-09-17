@@ -1,6 +1,6 @@
 using System;
 
-namespace CityOfTulsa.UI.Models {
+namespace CityOfTulsaUI.Models {
    public class ErrorViewModel {
       public string RequestId { get; set; }
 

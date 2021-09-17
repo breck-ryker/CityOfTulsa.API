@@ -25,6 +25,7 @@ namespace CityOfTulsa.UI {
          services
             .AddControllersWithViews()
             .AddRazorRuntimeCompilation()
+            .AddNewtonsoftJson()
             ;
       }
 
@@ -41,6 +42,7 @@ namespace CityOfTulsa.UI {
          }
 
          app.UseHttpsRedirection();
+
          app.UseStaticFiles();
 
          app.UseRouting();

@@ -8,11 +8,12 @@
    <link rel="stylesheet" type="text/css" href="@Url.Content("/css/tfddata.css")" />
    <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/font-awesome/all.css")" />
    @*<link rel="stylesheet" type="text/css" href="@Url.Content("/lib/mdb-datepicker/css/mdb.min.css")" />*@
-   <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/mdb-datepicker/css/style.css")" />
+   @*<link rel="stylesheet" type="text/css" href="@Url.Content("/lib/mdb-datepicker/css/style.css")" />*@
 }
 
 @section Scripts
 {
+   <script src="@Url.Content("/js/tfddata.js")"></script>
    <script src="@Url.Content("/lib/mdb-datepicker/js/popper.min.js")"></script>
    <script src="@Url.Content("/lib/mdb-datepicker/js/mdb.min.js")"></script>
 }
@@ -30,19 +31,19 @@
 
       <div class="btn-group btn-group-toggle float-sm-left align-self-center" data-toggle="buttons">
 
-         <label class="btn btn-secondary btn-sm active">
+         <label class="btn btn-outline-secondary btn-sm active">
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" checked> On
          </label>
 
-         <label class="btn btn-secondary btn-sm">
+         <label class="btn btn-outline-secondary btn-sm">
             <input type="radio" name="dateoptions" id="date_after" autocomplete="off"> After
          </label>
 
-         <label class="btn btn-secondary btn-sm">
+         <label class="btn btn-outline-secondary btn-sm">
             <input type="radio" name="dateoptions" id="date_before" autocomplete="off"> Before
          </label>
 
-         <label class="btn btn-secondary btn-sm">
+         <label class="btn btn-outline-secondary btn-sm">
             <input type="radio" name="dateoptions" id="date_between" autocomplete="off"> Between
          </label>
       </div>

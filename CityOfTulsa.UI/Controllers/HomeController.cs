@@ -1,4 +1,4 @@
-﻿using CityOfTulsa.UI.Models;
+﻿using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,13 +7,18 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CityOfTulsa.UI.Controllers {
+namespace CityOfTulsaUI.Controllers {
 
    public class HomeController : Controller {
 
       private readonly ILogger<HomeController> _logger;
 
-      public HomeController(ILogger<HomeController> logger) {
+		public string KeepSessionAlive() {
+
+			return System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+      }
+
+		public HomeController(ILogger<HomeController> logger) {
          _logger = logger;
       }
 
