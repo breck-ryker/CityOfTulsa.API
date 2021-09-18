@@ -2,10 +2,13 @@
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Controllers {
@@ -13,8 +16,9 @@ namespace CityOfTulsaUI.Controllers {
    public class HomeController : Controller {
 
       private readonly ILogger<HomeController> _logger;
+      private static readonly HttpClient _httpClient = new();
 
-		public string KeepSessionAlive() {
+      public string KeepSessionAlive() {
 
 			return System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
       }
@@ -34,6 +38,30 @@ namespace CityOfTulsaUI.Controllers {
          if (userModel == null) {
             userModel = new UserModel();
          }
+
+         var task = Task.Run(() => _httpClient.GetAsync("https://localhost:44305/tfd/problems"));
+         task.Wait();
+         var result = task.Result;
+
+         if (result.IsSuccessStatusCode) {
+            var readTask = result.Content.ReadAsStringAsync();
+            readTask.Wait();
+
+            List<string> problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+         }
+         else //web api sent error response 
+         {
+            //log response status here.
+
+            ModelState.AddModelError(string.Empty, "Server error.");
+         }
+
+
+         //_httpClient.DefaultRequestHeaders.Accept.Clear();
+         //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+         //_httpClient.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+
+         //var problems = _httpClient.GetAsync("https://localhost:44305/tfd/problems");
 
          HttpContext.Session.Set("UserModel", userModel);
 
