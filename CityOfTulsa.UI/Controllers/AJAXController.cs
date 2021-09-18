@@ -43,10 +43,6 @@ namespace CityOfTulsaUI.Controllers {
 
                   userModel.UseTFDDateFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
 
-                  if (!(userModel.UseTFDDateFilter)) {
-                     userModel.TFDDateFilterType = DateFilterType.None;
-                  }
-
                   break;
 
                case "tfd.set-dateoption":

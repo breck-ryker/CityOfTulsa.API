@@ -5,21 +5,18 @@
    ViewData["Title"] = "Tulsa Fire Department: Dispatch Data";
 }
 
-<h4>@ViewData["Title"]</h4>
+<h5>@ViewData["Title"]</h5>
 
 @section Styles
 {
+   <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css")" />
    <link rel="stylesheet" type="text/css" href="@Url.Content("/css/tfddata.css")" />
-   <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/font-awesome/all.css")" />
-   @*<link rel="stylesheet" type="text/css" href="@Url.Content("/lib/mdb-datepicker/css/mdb.min.css")" />*@
-   @*<link rel="stylesheet" type="text/css" href="@Url.Content("/lib/mdb-datepicker/css/style.css")" />*@
 }
 
 @section Scripts
 {
+   <script src="@Url.Content("/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
    <script src="@Url.Content("/js/tfddata.js")"></script>
-   <script src="@Url.Content("/lib/mdb-datepicker/js/popper.min.js")"></script>
-   <script src="@Url.Content("/lib/mdb-datepicker/js/mdb.min.js")"></script>
 }
 
 <div class="row mt-4" id="rowDateOptions">
@@ -27,13 +24,13 @@
    <div class="col-sm-12 d-flex">
 
       <div class="form-check float-sm-left align-self-center d-flex mr-3">
-         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions" @((Model.TFDDateFilterType == DateFilterType.None ? "" : "checked"))>
+         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions" @((Model.UseTFDDateFilter ? "checked" : ""))>
          <label class="form-check-label align-self-center font-weight-bold" for="show_dateoptions" id="label_showdateoptions">
             Filter by response date
          </label>
       </div>
 
-      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.TFDDateFilterType == DateFilterType.None ? "cotHidden" : "")" data-toggle="buttons">
+      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.UseTFDDateFilter ? "" : "cotHidden")" data-toggle="buttons">
 
          <label class="btn btn-outline-secondary btn-sm @((Model.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" checked> On
@@ -53,11 +50,18 @@
       </div>
    </div>
 </div>
-<div class="row @((Model.TFDDateFilterType == DateFilterType.None ? "cotHidden" : ""))" id="rowDates">
-   <div class="col-sm-6">
-
+<div class="row d-flex mt-3 flex-nowrap1 @((Model.UseTFDDateFilter ? "" : "cotHidden"))" id="rowDates">
+   <div class="align-self-center ml-5 col-xs-4 col-sm-3 col-md-3 col-lg-2 col-xl-2" id="mindate_container">
+      <div class="input-group date">
+         <input type="text" class="form-control datepicker" placeholder="date" id="mindate">
+      </div>
    </div>
-   <div class="col-sm-6">
-
+   <div class="align-self-center ml-5 text-center col-xs-2 col-sm-1 col-md-1 col-lg-1 col-xl-1 @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_label">
+      <span class="label">and</span>
+   </div>
+   <div class="align-self-center ml-5 col-xs-4 col-sm-3 col-md-3 col-lg-2 col-xl-2 @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_container">
+      <div class="input-group date">
+         <input type="text" class="form-control datepicker" placeholder="max date" id="maxdate">
+      </div>
    </div>
 </div>
