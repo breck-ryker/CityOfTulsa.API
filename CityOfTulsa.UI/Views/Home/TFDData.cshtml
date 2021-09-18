@@ -3,6 +3,7 @@
 
 @{
    ViewData["Title"] = "Tulsa Fire Department: Dispatch Data";
+   List<string> listProblems = (List<string>)ViewBag.Problems;
 }
 
 <h5>@ViewData["Title"]</h5>
@@ -23,9 +24,9 @@
 
    <div class="col-sm-12 d-flex">
 
-      <div class="form-check float-sm-left align-self-center d-flex mr-3">
+      <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
          <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_dateoptions" @((Model.UseTFDDateFilter ? "checked" : ""))>
-         <label class="form-check-label align-self-center font-weight-bold" for="show_dateoptions" id="label_showdateoptions">
+         <label class="form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_dateoptions" id="label_showdateoptions">
             Filter by response date
          </label>
       </div>
@@ -65,9 +66,26 @@
       </div>
    </div>
 </div>
-<div class="row mt-4" id="rowProblemFilters">
+<div class="row mt-4" id="rowProblemOptions">
+   <div class="col-sm-12 d-flex">
+      <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
+         <input class="form-check-input align-self-center mb-1" type="checkbox" value="" id="show_problemlist" @((Model.UseTFDProblemFilter ? "checked" : ""))>
+         <label class="form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_problemlist" id="label_showproblemlist">
+            Filter by problem type
+         </label>
+      </div>
+   </div>
+</div>
+<div class="row mt-4 @((Model.UseTFDProblemFilter ? "" : "cotHidden"))" id="rowProblemList">
 
    <div class="col-sm-12 d-flex">
 
+      <div id="problem_list">
+         @if (listProblems != null) { 
+            foreach (string problem in listProblems) {
+               <div>@problem</div>
+            }
+         } 
+      </div>
    </div>
 </div>

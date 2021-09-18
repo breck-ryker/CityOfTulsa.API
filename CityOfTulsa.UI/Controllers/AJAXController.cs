@@ -12,7 +12,6 @@ namespace CityOfTulsaUI.Controllers {
 
    public class AJAXController : Controller {
 
-      //[Authorize]
       [HttpPost]
       public IActionResult ProcessMessage(
          [FromBody]AJAXMessage ajaxMessage
@@ -48,6 +47,12 @@ namespace CityOfTulsaUI.Controllers {
                case "tfd.set-dateoption":
 
                   userModel.TFDDateFilterType = (DateFilterType)ajaxMessage.data.ToInteger();
+
+                  break;
+
+               case "tfd.show-problemlist":
+
+                  userModel.UseTFDProblemFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
 
                   break;
             }

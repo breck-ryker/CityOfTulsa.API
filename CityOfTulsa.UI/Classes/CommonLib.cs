@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 namespace CityOfTulsaUI.Classes {
 
    public static class CommonLib {
+
+      public enum CacheKeys {
+         COT_API_TFD_Problems = 1
+      }
    }
 
    public static class SessionExtensions {

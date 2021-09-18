@@ -3,11 +3,13 @@
    border-bottom: 4px solid orange;
 }
 
-#show_dateoptions {
+#show_dateoptions,
+#show_problemlist {
    width:20px;
    height:20px;
 }
 
-#label_showdateoptions {
+#label_showdateoptions,
+#label_showproblemlist {
    padding-left:12px;
 }

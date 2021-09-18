@@ -28,8 +28,10 @@ function ProcessAJAXCallbackResults_TFDData(responseData) {
 function SetCommonHandlers() {
 
    $('#show_dateoptions').off('change').on('change', function (e) {
+
       var $this = $(this);
       var isChecked = $this.prop('checked');
+
       if (isChecked) {
          $('#dateoptions_btngrp').removeClass('cotHidden');
       }
@@ -60,6 +62,20 @@ function SetCommonHandlers() {
 
    SetDatepickers();
 
+   $('#show_problemlist').off('change').on('change', function (e) {
+
+      var $this = $(this);
+      var isChecked = $this.prop('checked');
+
+      if (isChecked) {
+         $('#rowProblemList').removeClass('cotHidden');
+      }
+      else {
+         $('#rowProblemList').addClass('cotHidden');
+      }
+
+      CallAJAX('tfd.show-problemlist', (isChecked ? 1 : 0), null, null, null, true);
+   });
 }
 
 function SetDatepickers() {

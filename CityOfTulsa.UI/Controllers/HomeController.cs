@@ -1,6 +1,7 @@
 ﻿using CityOfTulsaUI.Classes;
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using static CityOfTulsaUI.Classes.CommonLib;
 
 namespace CityOfTulsaUI.Controllers {
 
@@ -17,14 +19,19 @@ namespace CityOfTulsaUI.Controllers {
 
       private readonly ILogger<HomeController> _logger;
       private static readonly HttpClient _httpClient = new();
+      private readonly IMemoryCache _cache;
 
       public string KeepSessionAlive() {
 
 			return System.DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
       }
 
-		public HomeController(ILogger<HomeController> logger) {
+		public HomeController(
+         ILogger<HomeController> logger,
+         IMemoryCache memoryCache
+      ) {
          _logger = logger;
+         _cache = memoryCache;
       }
 
       public IActionResult Index() {
@@ -39,29 +46,34 @@ namespace CityOfTulsaUI.Controllers {
             userModel = new UserModel();
          }
 
-         var task = Task.Run(() => _httpClient.GetAsync("https://localhost:44305/tfd/problems"));
-         task.Wait();
-         var result = task.Result;
+         List<string> problems = null;
 
-         if (result.IsSuccessStatusCode) {
-            var readTask = result.Content.ReadAsStringAsync();
-            readTask.Wait();
+         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Problems.ToString(), out problems))) {
 
-            List<string> problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+            var task = Task.Run(() => _httpClient.GetAsync("https://localhost:44305/tfd/problems"));
+            task.Wait();
+            var result = task.Result;
+
+            if (result.IsSuccessStatusCode) {
+
+               var readTask = result.Content.ReadAsStringAsync();
+               readTask.Wait();
+
+               problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+            }
+            else {
+               ModelState.AddModelError(string.Empty, "Server error.");
+            }
+
+            // Set cache options.
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
+
+            // Save data in cache.
+            _cache.Set(CacheKeys.COT_API_TFD_Problems.ToString(), problems, cacheEntryOptions);
          }
-         else //web api sent error response 
-         {
-            //log response status here.
 
-            ModelState.AddModelError(string.Empty, "Server error.");
-         }
-
-
-         //_httpClient.DefaultRequestHeaders.Accept.Clear();
-         //_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-         //_httpClient.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
-
-         //var problems = _httpClient.GetAsync("https://localhost:44305/tfd/problems");
+         this.ViewBag.Problems = problems;
 
          HttpContext.Session.Set("UserModel", userModel);
 

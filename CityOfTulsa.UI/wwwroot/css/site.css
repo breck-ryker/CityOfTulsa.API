@@ -106,3 +106,11 @@ ul.navbar-nav li.nav-item {
 .border1 {
    border: 1px solid #6c757d;
 }
+
+.noselect {
+   -webkit-touch-callout: none; /* iOS Safari */
+   -webkit-user-select: none; /* Safari */
+   -moz-user-select: none; /* Old versions of Firefox */
+   -ms-user-select: none; /* Internet Explorer/Edge */
+   user-select: none;
+}
