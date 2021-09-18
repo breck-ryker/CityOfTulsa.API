@@ -80,12 +80,21 @@
 
    <div class="col-sm-12 d-flex">
 
-      <div id="problem_list">
-         @if (listProblems != null) { 
+      <ul class="pl-0">
+         @if (listProblems != null) {
+            int i = 0;
             foreach (string problem in listProblems) {
-               <div>@problem</div>
+
+               <li class="list-group-item float-left">
+                  <div class="custom-control custom-checkbox">
+                     <input class="custom-control-input" id="problem_@i" type="checkbox">
+                     <label class="cursor-pointer d-block custom-control-label" for="problem_@i">@problem</label>
+                  </div>
+               </li>
+
+               i++;
             }
-         } 
-      </div>
+         }
+      </ul>
    </div>
 </div>

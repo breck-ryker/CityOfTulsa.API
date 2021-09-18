@@ -13,3 +13,8 @@
 #label_showproblemlist {
    padding-left:12px;
 }
+
+.list-group-item {
+   border: none;
+   padding: .35rem 0.65rem;
+}
