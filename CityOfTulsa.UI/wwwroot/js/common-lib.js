@@ -122,8 +122,8 @@ function CallAJAX(
 
    var jsonData = {
       cmd: (cmd || ''),
-      data: (data || ''),
-      context: (context || ''),
+      data: (data == null || typeof(data) == 'undefined' ? '' : data),
+      context: (context == null || typeof (context) == 'undefined' ? '' : context),
       ids: (ids || []),
       values: (values || []),
       dict: (dict || {})

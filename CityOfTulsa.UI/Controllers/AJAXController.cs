@@ -55,6 +55,23 @@ namespace CityOfTulsaUI.Controllers {
                   userModel.UseTFDProblemFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
 
                   break;
+
+               case "tfd.select-problem":
+
+                  if (!(string.IsNullOrWhiteSpace(ajaxMessage.context))) {
+                     if (ajaxMessage.data.ToInteger() > 0) {
+                        if (!(userModel.TFDProblems.Contains(ajaxMessage.context))) {
+                           userModel.TFDProblems.Add(ajaxMessage.context);
+                        }
+                     }
+                     else {
+                        if (userModel.TFDProblems.Contains(ajaxMessage.context)) {
+                           userModel.TFDProblems.Remove(ajaxMessage.context);
+                        }
+                     }
+                  }
+
+                  break;
             }
          }
          catch (System.Exception ex) {

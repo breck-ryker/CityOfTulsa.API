@@ -3,18 +3,40 @@
    border-bottom: 4px solid orange;
 }
 
-#show_dateoptions,
-#show_problemlist {
-   width:20px;
-   height:20px;
+#rowDateOptions,
+#rowProblemOptions {
+   min-height: 48px;
 }
 
-#label_showdateoptions,
-#label_showproblemlist {
+.filteroption-chkbox {
+   width: 20px;
+   height: 20px;
+   border-radius: 50% !important;
+}
+
+.filteroption-label {
    padding-left:12px;
+}
+
+.problem-label::before {
+   top: .14rem;
+   left: -1.58rem;
+   width: 1.2rem;
+   height: 1.2rem;
+   border-radius:0px !important;
 }
 
 .list-group-item {
    border: none;
    padding: .35rem 0.65rem;
+}
+
+.filter-date {
+   min-width: 120px;
+   max-width: 120px;
+}
+
+.btn-group label {
+   margin-bottom: 0px;
+   cursor: pointer;
 }

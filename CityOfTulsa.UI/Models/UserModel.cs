@@ -19,6 +19,15 @@ namespace CityOfTulsaUI.Models {
       public DateFilterType TFDDateFilterType { get; set; } = DateFilterType.OnDate;
 
       public bool UseTFDProblemFilter { get; set; } = false;
-      public List<string> TFDProblems { get; set; }
+      public List<string> TFDProblems { get; set; } = new List<string>();
+
+      public bool UseTFDDivisionFilter { get; set; } = false;
+      public List<string> TFDDivisions { get; set; } = new List<string>();
+
+      public bool UseTFDStationFilter { get; set; } = false;
+      public List<string> TFDStations { get; set; } = new List<string>();
+
+      public bool UseTFDVehicleFilter { get; set; } = false;
+      public List<string> TFDVehicles { get; set; } = new List<string>();
    }
 }

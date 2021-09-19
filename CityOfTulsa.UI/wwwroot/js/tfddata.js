@@ -69,12 +69,29 @@ function SetCommonHandlers() {
 
       if (isChecked) {
          $('#rowProblemList').removeClass('cotHidden');
+         $('#problemoptions_btngrp').removeClass('cotHidden');
       }
       else {
          $('#rowProblemList').addClass('cotHidden');
+         $('#problemoptions_btngrp').addClass('cotHidden');
       }
 
       CallAJAX('tfd.show-problemlist', (isChecked ? 1 : 0), null, null, null, true);
+   });
+
+   $('input.problem-item').off('change').on('change', function (e) {
+
+      var $this = $(this);
+      var isInUse = $this.data('is-in-use');
+      if (isInUse > 0) {
+         return;
+      }
+      var isChecked = $this.prop('checked');
+      var $parent = $this.closest('div');
+      var $label = $parent.find('label');
+      var lbl = $label.text();
+
+      CallAJAX('tfd.select-problem', (isChecked ? 1 : 0), lbl, null, null, true);
    });
 }
 
