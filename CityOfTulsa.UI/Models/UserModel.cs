@@ -15,19 +15,48 @@ namespace CityOfTulsaUI.Models {
 
    public class UserModel {
 
+      private List<string> _problems = null;
+      private List<string> _divisions = null;
+      private List<string> _stations = null;
+      private List<string> _vehicles = null;
+
       public bool UseTFDDateFilter { get; set; } = false;
       public DateFilterType TFDDateFilterType { get; set; } = DateFilterType.OnDate;
 
       public bool UseTFDProblemFilter { get; set; } = false;
-      public List<string> TFDProblems { get; set; } = new List<string>();
+      public List<string> TFDProblems { 
+         get { 
+            if (_problems == null) { _problems = new List<string>(); } 
+            return _problems; 
+         }
+         set { _problems = value; } 
+      }
 
       public bool UseTFDDivisionFilter { get; set; } = false;
-      public List<string> TFDDivisions { get; set; } = new List<string>();
+      public List<string> TFDDivsions {
+         get {
+            if (_divisions == null) { _divisions = new List<string>(); }
+            return _divisions;
+         }
+         set { _divisions = value; }
+      }
 
       public bool UseTFDStationFilter { get; set; } = false;
-      public List<string> TFDStations { get; set; } = new List<string>();
+      public List<string> TFDStations {
+         get {
+            if (_stations == null) { _stations = new List<string>(); }
+            return _stations;
+         }
+         set { _stations = value; }
+      }
 
       public bool UseTFDVehicleFilter { get; set; } = false;
-      public List<string> TFDVehicles { get; set; } = new List<string>();
+      public List<string> TFDVehicles {
+         get {
+            if (_vehicles == null) { _vehicles = new List<string>(); }
+            return _vehicles;
+         }
+         set { _vehicles = value; }
+      }
    }
 }

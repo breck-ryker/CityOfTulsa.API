@@ -93,6 +93,27 @@ function SetCommonHandlers() {
 
       CallAJAX('tfd.select-problem', (isChecked ? 1 : 0), lbl, null, null, true);
    });
+
+   $('#problemoptions_btngrp button').off('click').on('click', function (e) {
+
+      var $this = $(this);
+      var action = $this.data('action');
+      var $parent, $label, lbl;
+      var ary = [];
+
+      $('input.problem-item').each(function (i, elm) {
+         var $this = $(elm);
+         $this.data('is-in-use', 1);
+         $this.prop('checked', (action == 'select-all' ? true : false));
+         $parent = $this.closest('div');
+         $label = $parent.find('label');
+         lbl = $label.text();
+         ary.push(lbl);
+         $this.data('is-in-use', 0);
+      });
+
+      CallAJAX('tfd.multi-select-problems', null, action, null, ary, true);
+   });
 }
 
 function SetDatepickers() {

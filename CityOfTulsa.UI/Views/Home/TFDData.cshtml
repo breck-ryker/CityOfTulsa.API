@@ -33,19 +33,19 @@
 
       <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.UseTFDDateFilter ? "" : "cotHidden")" data-toggle="buttons">
 
-         <label class="btn btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
+         <label class="btn btn-sm btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" @((Model.TFDDateFilterType == DateFilterType.OnDate ? "checked" : ""))> On
          </label>
 
-         <label class="btn btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "active" : ""))">
+         <label class="btn btn-sm btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_after" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.AfterDate)" @((Model.TFDDateFilterType == DateFilterType.AfterDate ? "checked" : ""))> After
          </label>
 
-         <label class="btn btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "active" : ""))">
+         <label class="btn btn-sm btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_before" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BeforeDate)" @((Model.TFDDateFilterType == DateFilterType.BeforeDate ? "checked" : ""))> Before
          </label>
 
-         <label class="btn btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "active" : ""))">
+         <label class="btn btn-sm btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_between" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.BetweenDates)" @((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "checked" : ""))> Between
          </label>
       </div>
@@ -56,7 +56,7 @@
    <div class="col-12 d-flex">
       <div class="float-sm-left align-self-center ml-2" id="mindate_container">
          <div class="input-group date">
-            <input type="text" class="filter-date form-control datepicker bg1 border1 text-center" placeholder="@((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "min date" : "select date"))" id="mindate">
+            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="@((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "min date" : "select date"))" id="mindate">
          </div>
       </div>
       <div class="float-sm-left align-self-center ml-2 text-center @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_label">
@@ -64,7 +64,7 @@
       </div>
       <div class="float-sm-left align-self-center ml-2 @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_container">
          <div class="input-group date">
-            <input type="text" class="filter-date form-control datepicker bg1 border1 text-center" placeholder="max date" id="maxdate">
+            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="max date" id="maxdate">
          </div>
       </div>
    </div>
@@ -82,13 +82,8 @@
 
       <div id="problemoptions_btngrp" class="btn-group float-sm-left align-self-center ml-5 @(Model.UseTFDProblemFilter ? "" : "cotHidden")">
 
-         <label class="btn btn-outline-secondary">
-            Select All
-         </label>
-
-         <label class="btn btn-outline-secondary">
-            Unselect All
-         </label>
+         <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
+         <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
       </div>
    </div>
 </div>
@@ -103,7 +98,7 @@
 
                <li class="list-group-item float-left">
                   <div class="custom-control custom-checkbox">
-                     <input class="problem-chkbox custom-control-input problem-item" id="problem_@i" type="checkbox">
+                     <input class="problem-chkbox custom-control-input problem-item" id="problem_@i" type="checkbox" @((Model.TFDProblems.Contains(problem) ? "checked" : ""))>
                      <label class="problem-label cursor-pointer d-block custom-control-label user-select-none noselect" for="problem_@i">@problem</label>
                   </div>
                </li>
