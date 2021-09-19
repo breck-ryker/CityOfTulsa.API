@@ -14,59 +14,94 @@ namespace CityOfTulsaUI.Controllers {
 
       [HttpPost]
       public IActionResult ProcessMessage(
-         [FromBody]AJAXMessage ajaxMessage
+         [FromBody]AJAXMessage msg
       ) {
 
-         AJAXPayload ajaxPayload = new AJAXPayload(ajaxMessage);
-         UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
+         AJAXPayload payload = new AJAXPayload(msg);
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
          
-         if (userModel == null) {
-            userModel = new UserModel();
+         if (model == null) {
+            model = new UserModel();
          }
 
          try {
 
-            ajaxPayload.timetext = System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss-fff");
+            payload.timetext = System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss-fff");
 
-            switch ((ajaxMessage.cmd ?? "").Trim().ToLower()) {
+            switch ((msg.cmd ?? "").Trim().ToLower()) {
 
-               case "tfd.set-mindate":
+               case "tfd.do-init-validation":
 
-                  break;
-
-               case "tfd.set-maxdate":
-
-                  break;
-
-               case "tfd.show-dateoptions":
-
-                  userModel.UseTFDDateFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
+                  // may expand this block in the future to do other kinds of server-side validation checks, not just for dates.
+                  payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
 
                   break;
 
-               case "tfd.set-dateoption":
+               case "tfd.date-changed":
 
-                  userModel.TFDDateFilterType = (DateFilterType)ajaxMessage.data.ToInteger();
+                  if (!(string.IsNullOrWhiteSpace(msg.data)) && !(string.IsNullOrWhiteSpace(msg.context))) {
+
+                     DateTime.TryParse(msg.data, out DateTime dt);
+
+                     switch ((msg.context ?? "").ToLower()) {
+
+                        case "mindate":
+
+                           model.MinDateText = msg.data;
+
+                           if (dt.IsValidValue()) {
+                              model.MinDate = dt;
+                           }
+
+                           break;
+
+                        case "maxdate":
+
+                           model.MaxDateText = msg.data;
+
+                           if (dt.IsValidValue()) {
+                              model.MaxDate = dt;
+                           }
+
+                           break;
+                     }
+
+                     payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
+                  }
+
+                  break;
+
+               case "tfd.show-datefilter-options":
+
+                  model.UseTFDDateFilter = (msg.data.ToInteger() <= 0 ? false : true);
+
+                  break;
+
+               case "tfd.set-datefilter-option":
+
+                  model.TFDDateFilterType = (DateFilterType)msg.data.ToInteger();
+
+                  payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
 
                   break;
 
                case "tfd.show-problemlist":
 
-                  userModel.UseTFDProblemFilter = (ajaxMessage.data.ToInteger() <= 0 ? false : true);
+                  model.UseTFDProblemFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
                case "tfd.select-problem":
 
-                  if (!(string.IsNullOrWhiteSpace(ajaxMessage.context))) {
-                     if (ajaxMessage.data.ToInteger() > 0) {
-                        if (!(userModel.TFDProblems.Contains(ajaxMessage.context))) {
-                           userModel.TFDProblems.Add(ajaxMessage.context);
+                  if (!(string.IsNullOrWhiteSpace(msg.context))) {
+                     if (msg.data.ToInteger() > 0) {
+                        if (!(model.TFDProblems.Contains(msg.context))) {
+                           model.TFDProblems.Add(msg.context);
                         }
                      }
                      else {
-                        if (userModel.TFDProblems.Contains(ajaxMessage.context)) {
-                           userModel.TFDProblems.Remove(ajaxMessage.context);
+                        if (model.TFDProblems.Contains(msg.context)) {
+                           model.TFDProblems.Remove(msg.context);
                         }
                      }
                   }
@@ -75,12 +110,12 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.multi-select-problems":
 
-                  if (!(string.IsNullOrWhiteSpace(ajaxMessage.context)) && ajaxMessage.values != null && ajaxMessage.values.Length > 0) {
-                     if (ajaxMessage.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
-                        userModel.TFDProblems = ajaxMessage.values.ToList();
+                  if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
+                     if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDProblems = msg.values.ToList();
                      }
-                     else if (ajaxMessage.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
-                        userModel.TFDProblems.Clear();
+                     else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDProblems.Clear();
                      }
                   }
 
@@ -89,16 +124,16 @@ namespace CityOfTulsaUI.Controllers {
          }
          catch (System.Exception ex) {
 
-            ajaxPayload.cmd = "error";
-            ajaxPayload.origcmd = ajaxMessage.cmd;
-            ajaxPayload.value = (-1).ToString();
-            ajaxPayload.msg = ex.ToString();
+            payload.cmd = "error";
+            payload.origcmd = msg.cmd;
+            payload.value = (-1).ToString();
+            payload.msg = ex.ToString();
          }
 
-         HttpContext.Session.Set("UserModel", userModel);
+         HttpContext.Session.Set("UserModel", model);
 
-         JsonResult jsonResult = new JsonResult(
-            JsonConvert.SerializeObject(ajaxPayload)
+         JsonResult jsonResult = new(
+            JsonConvert.SerializeObject(payload)
             );
 
          return jsonResult;

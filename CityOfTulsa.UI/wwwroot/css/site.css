@@ -80,7 +80,7 @@ ul.navbar-nav li.nav-item {
    border-bottom: 4px solid transparent;
 }
 
-.cotHidden {
+.cot-hidden {
    display:none !important;
 }
 
@@ -98,4 +98,8 @@ ul.navbar-nav li.nav-item {
    -moz-user-select: none; /* Old versions of Firefox */
    -ms-user-select: none; /* Internet Explorer/Edge */
    user-select: none;
+}
+
+.datepicker.datepicker-dropdown.dropdown-menu {
+   border:2px solid orange;
 }

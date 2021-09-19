@@ -23,6 +23,11 @@ namespace CityOfTulsaUI.Models {
       public bool UseTFDDateFilter { get; set; } = false;
       public DateFilterType TFDDateFilterType { get; set; } = DateFilterType.OnDate;
 
+      public string MinDateText { get; set; } = null;
+      public string MaxDateText { get; set; } = null;
+      public DateTime MinDate { get; set; } = DateTime.MinValue;
+      public DateTime MaxDate { get; set; } = DateTime.MaxValue;
+
       public bool UseTFDProblemFilter { get; set; } = false;
       public List<string> TFDProblems { 
          get { 

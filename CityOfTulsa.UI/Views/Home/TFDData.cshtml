@@ -31,7 +31,7 @@
          </label>
       </div>
 
-      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.UseTFDDateFilter ? "" : "cotHidden")" data-toggle="buttons">
+      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.UseTFDDateFilter ? "" : "cot-hidden")" data-toggle="buttons">
 
          <label class="btn btn-sm btn-outline-secondary @((Model.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" @((Model.TFDDateFilterType == DateFilterType.OnDate ? "checked" : ""))> On
@@ -51,23 +51,26 @@
       </div>
    </div>
 </div>
-<div class="row d-flex mt-4 flex-nowrap @((Model.UseTFDDateFilter ? "" : "cotHidden"))" id="rowDates">
+<div class="row d-flex mt-4 flex-nowrap @((Model.UseTFDDateFilter ? "" : "cot-hidden"))" id="rowDates">
 
    <div class="col-12 d-flex">
       <div class="float-sm-left align-self-center ml-2" id="mindate_container">
          <div class="input-group date">
-            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="@((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "min date" : "select date"))" id="mindate">
+            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="@((Model.TFDDateFilterType == DateFilterType.BetweenDates ? "min date" : "select date"))" id="mindate" value="@((Model.MinDate == DateTime.MinValue || Model.MinDate == DateTime.MaxValue ? "" : Model.MinDate.ToString("MM/dd/yyyy")))">
          </div>
       </div>
-      <div class="float-sm-left align-self-center ml-2 text-center @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_label">
+      <div class="float-sm-left align-self-center ml-2 text-center @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cot-hidden"))" id="maxdate_label">
          <span class="label">- and -</span>
       </div>
-      <div class="float-sm-left align-self-center ml-2 @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cotHidden"))" id="maxdate_container">
+      <div class="float-sm-left align-self-center ml-2 @((Model.UseTFDDateFilter && Model.TFDDateFilterType == DateFilterType.BetweenDates ? "" : "cot-hidden"))" id="maxdate_container">
          <div class="input-group date">
-            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="max date" id="maxdate">
+            <input type="text" class="filter-date btn-sm form-control datepicker bg1 border1 text-center" autocomplete="off" placeholder="max date" id="maxdate" value="@((Model.MaxDate == DateTime.MinValue || Model.MaxDate == DateTime.MaxValue ? "" : Model.MaxDate.ToString("MM/dd/yyyy")))">
          </div>
       </div>
    </div>
+</div>
+<div class="row cot-validator cot-hidden">
+   <div class="col-12 text-danger font-weight-bold cot-validator-msg pl-4 pt-4"></div>
 </div>
 <div class="row mt-4" id="rowProblemOptions">
 
@@ -80,14 +83,14 @@
          </label>
       </div>
 
-      <div id="problemoptions_btngrp" class="btn-group float-sm-left align-self-center ml-5 @(Model.UseTFDProblemFilter ? "" : "cotHidden")">
+      <div id="problemoptions_btngrp" class="btn-group float-sm-left align-self-center ml-5 @(Model.UseTFDProblemFilter ? "" : "cot-hidden")">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
       </div>
    </div>
 </div>
-<div class="row mt-4 @((Model.UseTFDProblemFilter ? "" : "cotHidden"))" id="rowProblemList">
+<div class="row mt-4 @((Model.UseTFDProblemFilter ? "" : "cot-hidden"))" id="rowProblemList">
 
    <div class="col-sm-12 d-flex">
 

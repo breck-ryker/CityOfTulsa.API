@@ -35,15 +35,23 @@ namespace CityOfTulsaUI.Controllers {
       }
 
       public IActionResult Index() {
-         return View();
+
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (model == null) {
+            model = new UserModel();
+            HttpContext.Session.Set("UserModel", model);
+         }
+
+         return View(model);
       }
 
       public IActionResult TFDData() {
 
-         UserModel userModel = HttpContext.Session.Get<UserModel>("UserModel");
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
-         if (userModel == null) {
-            userModel = new UserModel();
+         if (model == null) {
+            model = new UserModel();
          }
 
          List<string> problems = null;
@@ -75,9 +83,33 @@ namespace CityOfTulsaUI.Controllers {
 
          this.ViewBag.Problems = problems;
 
-         HttpContext.Session.Set("UserModel", userModel);
+         HttpContext.Session.Set("UserModel", model);
 
-         return View(userModel);
+         return View(model);
+      }
+
+      public IActionResult AboutCOTWebAPI() {
+
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (model == null) {
+            model = new UserModel();
+            HttpContext.Session.Set("UserModel", model);
+         }
+
+         return View(model);
+      }
+
+      public IActionResult AboutCOTProject() {
+
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (model == null) {
+            model = new UserModel();
+            HttpContext.Session.Set("UserModel", model);
+         }
+
+         return View(model);
       }
 
       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

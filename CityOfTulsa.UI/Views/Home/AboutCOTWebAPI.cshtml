@@ -1,0 +1,29 @@
+﻿
+@model CityOfTulsaUI.Models.UserModel
+
+@{
+   ViewData["Title"] = "City of Tulsa Data - Web API";
+}
+
+@section Styles
+{
+   <link rel="stylesheet" type="text/css" href="@Url.Content("/css/aboutcotwebapi.css")" />
+}
+
+@section Scripts
+{
+}
+
+<div class="card text-center">
+   @*<div class="card-header">
+      Web API
+   </div>*@
+   <div class="card-body">
+      <h5 class="card-title">CityofTulsaData.com Web API</h5>
+      <p class="card-text">You can explore the CityofTulsaData.com web api here:</p>
+      <a href="https://localhost:44305/swagger" target="_blank" class="btn btn-primary">Web API</a>
+   </div>
+   <div class="card-footer text-muted">
+      (Not affiliated with <a href="https://www.cityoftulsa.org/" target="_blank">City of Tulsa</a>)
+   </div>
+</div>

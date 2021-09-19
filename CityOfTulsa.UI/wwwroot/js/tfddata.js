@@ -9,6 +9,8 @@ $(document).ready(function () {
 	_commonlib.addListener('_ProcessAJAXCallbackResults', ProcessAJAXCallbackResults_TFDData);
 
    SetCommonHandlers();
+
+   CallAJAX('tfd.do-init-validation', null, null, null, null, true);
 });
 
 function ProcessAJAXCallbackResults_TFDData(responseData) {
@@ -19,9 +21,35 @@ function ProcessAJAXCallbackResults_TFDData(responseData) {
 
    switch ((responseData.parameters.cmd || '').toLowerCase()) {
 
-      case 'tfd':
+      case 'tfd.do-init-validation':
+
+         CheckForInvalidDateMessage(responseData, 1);
 
          break;
+
+      case 'tfd.date-changed':
+      case 'tfd.set-datefilter-option':
+
+         CheckForInvalidDateMessage(responseData, 0);
+
+         break;
+   }
+}
+
+function CheckForInvalidDateMessage(responseData, strictness) {
+
+   var $divInvalidMsg = $('#rowDates + div');
+
+   if ($divInvalidMsg && $divInvalidMsg.length == 1 && $divInvalidMsg.hasClass('cot-validator')) {
+
+      if (responseData.parameters.returncode < 0 && responseData.parameters.msg && (strictness > 0 || responseData.parameters.msgmode != 'no-user-entry')) {
+         $divInvalidMsg.find('.cot-validator-msg').text(responseData.parameters.msg);
+         $divInvalidMsg.removeClass('cot-hidden');
+      }
+      else {
+         $divInvalidMsg.find('.cot-validator-msg').text('');
+         $divInvalidMsg.addClass('cot-hidden');
+      }
    }
 }
 
@@ -33,10 +61,10 @@ function SetCommonHandlers() {
       var isChecked = $this.prop('checked');
 
       if (isChecked) {
-         $('#dateoptions_btngrp').removeClass('cotHidden');
+         $('#dateoptions_btngrp').removeClass('cot-hidden');
       }
       else {
-         $('#dateoptions_btngrp').addClass('cotHidden');
+         $('#dateoptions_btngrp').addClass('cot-hidden');
       }
 
       if (!(isChecked)) {
@@ -47,7 +75,7 @@ function SetCommonHandlers() {
          SetDatepickersVisibility(dateoption);
       }
 
-      CallAJAX('tfd.show-dateoptions', (isChecked ? 1 : 0), null, null, null, true);
+      CallAJAX('tfd.show-datefilter-options', (isChecked ? 1 : 0), null, null, null, true);
    });
 
    $('#dateoptions_btngrp').off('change').on('change', function (e) {
@@ -57,7 +85,7 @@ function SetCommonHandlers() {
 
       SetDatepickersVisibility(dateoption);
 
-      CallAJAX('tfd.set-dateoption', dateoption, null, null, null, true);
+      CallAJAX('tfd.set-datefilter-option', dateoption, null, null, null, true);
    });
 
    SetDatepickers();
@@ -68,12 +96,12 @@ function SetCommonHandlers() {
       var isChecked = $this.prop('checked');
 
       if (isChecked) {
-         $('#rowProblemList').removeClass('cotHidden');
-         $('#problemoptions_btngrp').removeClass('cotHidden');
+         $('#rowProblemList').removeClass('cot-hidden');
+         $('#problemoptions_btngrp').removeClass('cot-hidden');
       }
       else {
-         $('#rowProblemList').addClass('cotHidden');
-         $('#problemoptions_btngrp').addClass('cotHidden');
+         $('#rowProblemList').addClass('cot-hidden');
+         $('#problemoptions_btngrp').addClass('cot-hidden');
       }
 
       CallAJAX('tfd.show-problemlist', (isChecked ? 1 : 0), null, null, null, true);
@@ -122,10 +150,17 @@ function SetDatepickers() {
    var sToday = (dtToday.getMonth() + 1) + '/' + dtToday.getDate() + '/' + dtToday.getFullYear();
 
    $('input.datepicker').datepicker({
+      autoclose: true,
       format: 'mm/dd/yyyy',
       startDate: '09/14/2021',
       endDate: sToday,
       todayHighlight: true
+   }).on('changeDate', function (e) {
+      var $this = $(this);
+      var id = $this.attr('id');
+      var dt = e.date;
+      var data = (dt.getMonth() + 1) + '/' + dt.getDate() + '/' + dt.getFullYear();
+      CallAJAX('tfd.date-changed', data, id, [id], null, true);
    });
 }
 
@@ -133,20 +168,20 @@ function SetDatepickersVisibility(dateoption) {
 
    if (dateoption == 4) {
       $('#mindate').attr('placeholder', 'min date');
-      $('#maxdate_container,#maxdate_label').removeClass('cotHidden');
+      $('#maxdate_container,#maxdate_label').removeClass('cot-hidden');
    }
    else {
       $('#mindate').attr('placeholder', 'select date');
-      $('#maxdate_container,#maxdate_label').addClass('cotHidden');
+      $('#maxdate_container,#maxdate_label').addClass('cot-hidden');
    }
 
    if (dateoption > 0) {
 
-      $('#rowDates').removeClass('cotHidden');
+      $('#rowDates').removeClass('cot-hidden');
 
       SetDatepickers();
    }
    else {
-      $('#rowDates').addClass('cotHidden');
+      $('#rowDates').addClass('cot-hidden');
    }
 }
