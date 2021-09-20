@@ -2,7 +2,9 @@
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,9 +19,11 @@ namespace CityOfTulsaUI.Controllers {
 
    public class HomeController : Controller {
 
+      private readonly IConfiguration _config = null;
       private readonly ILogger<HomeController> _logger;
       private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
+      private readonly PathSettings _pathSettings;
 
       public string KeepSessionAlive() {
 
@@ -28,10 +32,14 @@ namespace CityOfTulsaUI.Controllers {
 
 		public HomeController(
          ILogger<HomeController> logger,
-         IMemoryCache memoryCache
+         IMemoryCache memoryCache,
+         IConfiguration config,
+         IOptions<PathSettings> pathSettings
       ) {
          _logger = logger;
          _cache = memoryCache;
+         _config = config;
+         _pathSettings = pathSettings.Value;
       }
 
       public IActionResult Index() {
@@ -39,9 +47,11 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel();
+            model = new UserModel(_pathSettings);
             HttpContext.Session.Set("UserModel", model);
          }
+
+         if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 
          return View(model);
       }
@@ -51,14 +61,14 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel();
+            model = new UserModel(_pathSettings);
          }
 
          List<string> problems = null;
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Problems.ToString(), out problems))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync("https://localhost:44305/tfd/problems"));
+            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDProblemsURL));
             task.Wait();
             var result = task.Result;
 
@@ -83,6 +93,8 @@ namespace CityOfTulsaUI.Controllers {
 
          this.ViewBag.Problems = problems;
 
+         if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
+
          HttpContext.Session.Set("UserModel", model);
 
          return View(model);
@@ -93,9 +105,11 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel();
+            model = new UserModel(_pathSettings);
             HttpContext.Session.Set("UserModel", model);
          }
+
+         if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 
          return View(model);
       }
@@ -105,9 +119,11 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel();
+            model = new UserModel(_pathSettings);
             HttpContext.Session.Set("UserModel", model);
          }
+
+         if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 
          return View(model);
       }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CityOfTulsaUI.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,6 +20,12 @@ namespace CityOfTulsaUI.Models {
       private List<string> _divisions = null;
       private List<string> _stations = null;
       private List<string> _vehicles = null;
+
+      public UserModel(PathSettings pathSettings) {
+         this.PathSettings = pathSettings;
+      }
+
+      public PathSettings PathSettings { get; set; } = null;
 
       public bool UseTFDDateFilter { get; set; } = false;
       public DateFilterType TFDDateFilterType { get; set; } = DateFilterType.OnDate;

@@ -2,15 +2,38 @@
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Controllers {
 
    public class AJAXController : Controller {
+
+      private readonly IConfiguration _config = null;
+      private readonly ILogger<HomeController> _logger;
+      //private static readonly HttpClient _httpClient = new();
+      private readonly IMemoryCache _cache;
+      private readonly PathSettings _pathSettings;
+
+      public AJAXController(
+         ILogger<HomeController> logger,
+         IMemoryCache memoryCache,
+         IConfiguration config,
+         IOptions< PathSettings > pathSettings
+      ) {
+         _logger = logger;
+         _cache = memoryCache;
+         _config = config;
+         _pathSettings = pathSettings.Value;
+      }
 
       [HttpPost]
       public IActionResult ProcessMessage(
@@ -21,7 +44,7 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
          
          if (model == null) {
-            model = new UserModel();
+            model = new UserModel(_pathSettings);
          }
 
          try {

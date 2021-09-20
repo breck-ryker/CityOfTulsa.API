@@ -1,3 +1,4 @@
+using CityOfTulsaUI.Classes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,7 +17,7 @@ namespace CityOfTulsa.UI {
       public IConfiguration Configuration { get; }
 
       public Startup(IConfiguration config) {
-         Configuration = config;
+         this.Configuration = config;
       }
 
       // This method gets called by the runtime. Use this method to add services to the container.
@@ -34,6 +35,8 @@ namespace CityOfTulsa.UI {
             ;
             
          services.AddSession();
+
+         services.Configure<PathSettings>(this.Configuration);
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
