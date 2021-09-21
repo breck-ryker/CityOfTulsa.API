@@ -67,7 +67,7 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("problems")]
-      public IEnumerable<string> Get(
+      public IEnumerable<string> GetProblems(
          string? mindate = null, 
          string? maxdate = null,
          string? divisions = null,
@@ -99,6 +99,31 @@ namespace CityOfTulsaAPI.Controllers {
                ).Any()
             )
             .Select(e => e.Problem)
+            .Where(p => !(string.IsNullOrWhiteSpace(p)))
+            .Distinct()
+            .Take(1000)
+            ;
+      }
+
+      [HttpGet("divisions")]
+      public IEnumerable<string> GetDivisions(
+         string? mindate = null,
+         string? maxdate = null
+      ) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin)
+               &&
+               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+            )
+            .Include(e => e.FireVehicles)
+            .SelectMany(e => e.FireVehicles)
+            .Select(v => v.Division)
+            .Where(d => !(string.IsNullOrWhiteSpace(d)))
             .Distinct()
             .Take(1000)
             ;

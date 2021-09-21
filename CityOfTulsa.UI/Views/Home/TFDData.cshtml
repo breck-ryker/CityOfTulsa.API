@@ -4,6 +4,9 @@
 @{
    ViewData["Title"] = "Search Tulsa Fire Department Dispatch Data";
    List<string> listProblems = (List<string>)ViewBag.Problems;
+   List<string> listDivisions = (List<string>)ViewBag.Divisions;
+   List<string> listStations = (List<string>)ViewBag.Stations;
+   List<string> listVehicles = (List<string>)ViewBag.Vehicles;
 }
 
 <h5 class="text-muted">@ViewData["Title"]</h5>
@@ -77,13 +80,13 @@
    <div class="col-sm-12 d-flex">
 
       <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
-         <input class="filteroption-chkbox form-check-input align-self-center mb-1" type="checkbox" value="" id="show_problemlist" @((Model.UseTFDProblemFilter ? "checked" : ""))>
+         <input class="filteroption-chkbox cot-option-chkbox form-check-input align-self-center mb-1" type="checkbox" value="" id="show_problemlist" @((Model.UseTFDProblemFilter ? "checked" : "")) data-btngrpid="problemoptions_btngrp" data-listrowid="rowProblemList" data-cotcmd="tfd.show-problemlist">
          <label class="filteroption-label form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_problemlist" id="label_showproblemlist">
             Filter by problem type
          </label>
       </div>
 
-      <div id="problemoptions_btngrp" class="btn-group float-sm-left align-self-center ml-5 @(Model.UseTFDProblemFilter ? "" : "cot-hidden")">
+      <div id="problemoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.UseTFDProblemFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-problems" data-actiontarget="problem-chkbox">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
@@ -94,15 +97,135 @@
 
    <div class="col-sm-12 d-flex">
 
-      <ul class="pl-0">
+      <ul class="pl-0 cot-chkbox-list" data-cotcmd="tfd.select-problem">
          @if (listProblems != null) {
             int i = 0;
             foreach (string problem in listProblems) {
 
                <li class="list-group-item float-left">
                   <div class="custom-control custom-checkbox">
-                     <input class="problem-chkbox custom-control-input problem-item" id="problem_@i" type="checkbox" @((Model.TFDProblems.Contains(problem) ? "checked" : ""))>
-                     <label class="problem-label cursor-pointer d-block custom-control-label user-select-none noselect" for="problem_@i">@problem</label>
+                     <input class="problem-chkbox custom-control-input cot-chkbox-item" id="problem_@i" type="checkbox" @((Model.TFDProblems.Contains(problem) ? "checked" : ""))>
+                     <label class="cursor-pointer d-block custom-control-label user-select-none noselect" for="problem_@i">@(problem ?? "{empty}")</label>
+                  </div>
+               </li>
+
+               i++;
+            }
+         }
+      </ul>
+   </div>
+</div>
+<div class="row mt-4" id="rowDivisionOptions">
+
+   <div class="col-sm-12 d-flex">
+
+      <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
+         <input class="filteroption-chkbox cot-option-chkbox form-check-input align-self-center mb-1" type="checkbox" value="" id="show_divisionlist" @((Model.UseTFDDivisionFilter ? "checked" : "")) data-btngrpid="divisionoptions_btngrp" data-listrowid="rowDivisionList" data-cotcmd="tfd.show-divisionlist">
+         <label class="filteroption-label form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_divisionlist" id="label_showdivisionlist">
+            Filter by division
+         </label>
+      </div>
+
+      <div id="divisionoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.UseTFDDivisionFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-divisions" data-actiontarget="division-chkbox">
+
+         <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
+         <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
+      </div>
+   </div>
+</div>
+<div class="row mt-4 @((Model.UseTFDDivisionFilter ? "" : "cot-hidden"))" id="rowDivisionList">
+
+   <div class="col-sm-12 d-flex">
+
+      <ul class="pl-0 cot-chkbox-list" data-cotcmd="tfd.select-division">
+         @if (listDivisions != null) {
+            int i = 0;
+            foreach (string division in listDivisions) {
+
+               <li class="list-group-item float-left">
+                  <div class="custom-control custom-checkbox">
+                     <input class="division-chkbox custom-control-input cot-chkbox-item" id="division_@i" type="checkbox" @((Model.TFDDivsions.Contains(division) ? "checked" : ""))>
+                     <label class="cursor-pointer d-block custom-control-label user-select-none noselect" for="division_@i">@(division ?? "{empty}")</label>
+                  </div>
+               </li>
+
+               i++;
+            }
+         }
+      </ul>
+   </div>
+</div>
+<div class="row mt-4" id="rowStationOptions">
+
+   <div class="col-sm-12 d-flex">
+
+      <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
+         <input class="filteroption-chkbox cot-option-chkbox form-check-input align-self-center mb-1" type="checkbox" value="" id="show_stationlist" @((Model.UseTFDStationFilter ? "checked" : "")) data-btngrpid="stationoptions_btngrp" data-listrowid="rowStationList" data-cotcmd="tfd.show-stationlist">
+         <label class="filteroption-label form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_stationlist" id="label_showstationlist">
+            Filter by station
+         </label>
+      </div>
+
+      <div id="stationoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.UseTFDStationFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-stations" data-actiontarget="station-chkbox">
+
+         <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
+         <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
+      </div>
+   </div>
+</div>
+<div class="row mt-4 @((Model.UseTFDStationFilter ? "" : "cot-hidden"))" id="rowStationList">
+
+   <div class="col-sm-12 d-flex">
+
+      <ul class="pl-0 cot-chkbox-list" data-cotcmd="tfd.select-station">
+         @if (listStations != null) {
+            int i = 0;
+            foreach (string station in listStations) {
+
+               <li class="list-group-item float-left">
+                  <div class="custom-control custom-checkbox">
+                     <input class="station-chkbox custom-control-input cot-chkbox-item" id="station_@i" type="checkbox" @((Model.TFDStations.Contains(station) ? "checked" : ""))>
+                     <label class="cursor-pointer d-block custom-control-label user-select-none noselect" for="station_@i">@(station ?? "{empty}")</label>
+                  </div>
+               </li>
+
+               i++;
+            }
+         }
+      </ul>
+   </div>
+</div>
+<div class="row mt-4" id="rowVehicleOptions">
+
+   <div class="col-sm-12 d-flex">
+
+      <div class="form-check float-sm-left align-self-center d-flex mr-3 noselect user-select-none">
+         <input class="filteroption-chkbox cot-option-chkbox form-check-input align-self-center mb-1" type="checkbox" value="" id="show_vehiclelist" @((Model.UseTFDVehicleFilter ? "checked" : "")) data-btngrpid="vehicleoptions_btngrp" data-listrowid="rowVehicleList" data-cotcmd="tfd.show-vehiclelist">
+         <label class="filteroption-label form-check-label align-self-center font-weight-bold noselect user-select-none" for="show_vehiclelist" id="label_showvehiclelist">
+            Filter by vehicle ID
+         </label>
+      </div>
+
+      <div id="vehicleoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.UseTFDVehicleFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-vehicles" data-actiontarget="vehicle-chkbox">
+
+         <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
+         <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
+      </div>
+   </div>
+</div>
+<div class="row mt-4 @((Model.UseTFDVehicleFilter ? "" : "cot-hidden"))" id="rowVehicleList">
+
+   <div class="col-sm-12 d-flex">
+
+      <ul class="pl-0 cot-chkbox-list" data-cotcmd="tfd.select-vehicle">
+         @if (listVehicles != null) {
+            int i = 0;
+            foreach (string vehicle in listVehicles) {
+
+               <li class="list-group-item float-left">
+                  <div class="custom-control custom-checkbox">
+                     <input class="vehicle-chkbox custom-control-input cot-chkbox-item" id="vehicle_@i" type="checkbox" @((Model.TFDVehicles.Contains(vehicle) ? "checked" : ""))>
+                     <label class="cursor-pointer d-block custom-control-label user-select-none noselect" for="vehicle_@i">@(vehicle ?? "{empty}")</label>
                   </div>
                </li>
 

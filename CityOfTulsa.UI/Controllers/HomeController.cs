@@ -65,6 +65,7 @@ namespace CityOfTulsaUI.Controllers {
          }
 
          List<string> problems = null;
+         List<string> divisions = null;
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Problems.ToString(), out problems))) {
 
@@ -80,7 +81,7 @@ namespace CityOfTulsaUI.Controllers {
                problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
             }
             else {
-               ModelState.AddModelError(string.Empty, "Server error.");
+               ModelState.AddModelError(string.Empty, "TFD Problem Data: Server Error");
             }
 
             // Set cache options.
@@ -91,7 +92,33 @@ namespace CityOfTulsaUI.Controllers {
             _cache.Set(CacheKeys.COT_API_TFD_Problems.ToString(), problems, cacheEntryOptions);
          }
 
+         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Divisions.ToString(), out divisions))) {
+
+            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDDivisionsURL));
+            task.Wait();
+            var result = task.Result;
+
+            if (result.IsSuccessStatusCode) {
+
+               var readTask = result.Content.ReadAsStringAsync();
+               readTask.Wait();
+
+               divisions = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+            }
+            else {
+               ModelState.AddModelError(string.Empty, "TFD Division Data: Server Error");
+            }
+
+            // Set cache options.
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
+
+            // Save data in cache.
+            _cache.Set(CacheKeys.COT_API_TFD_Divisions.ToString(), divisions, cacheEntryOptions);
+         }
+
          this.ViewBag.Problems = problems;
+         this.ViewBag.Divisions = divisions;
 
          if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 

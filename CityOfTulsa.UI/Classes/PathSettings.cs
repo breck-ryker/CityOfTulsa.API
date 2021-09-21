@@ -11,7 +11,13 @@ namespace CityOfTulsaUI.Classes {
          //todo
       }
 
+      public string WebAPISwaggerURL { get; set; } = null;
+
       public string TFDProblemsURL { get; set; } = null;
+      public string TFDDivisionsURL { get; set; } = null;
+      public string TFDStationsURL { get; set; } = null;
+      public string TFDVehiclesURL { get; set; } = null;
+
       public string CityOfTulsaOrgURL { get; set; } = null;
    }
 }

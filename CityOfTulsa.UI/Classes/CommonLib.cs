@@ -11,7 +11,10 @@ namespace CityOfTulsaUI.Classes {
    public static class CommonLib {
 
       public enum CacheKeys {
-         COT_API_TFD_Problems = 1
+         COT_API_TFD_Problems = 1,
+         COT_API_TFD_Divisions = 2,
+         COT_API_TFD_Stations = 3,
+         COT_API_TFD_VehicleIDs = 4
       }
 
       public static int validateDateFilters(UserModel model, ref AJAXPayload payload) {

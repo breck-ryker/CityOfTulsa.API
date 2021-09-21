@@ -2,7 +2,7 @@
 @model CityOfTulsaUI.Models.UserModel
 
 @{
-   ViewData["Title"] = "City of Tulsa Data - Web API";
+   ViewData["Title"] = "CityofTulsaData.com - Web API";
 }
 
 @section Styles
@@ -19,9 +19,9 @@
       Web API
    </div>*@
    <div class="card-body">
-      <h5 class="card-title">CityofTulsaData.com Web API</h5>
+      <h5 class="card-title">@ViewData["Title"]</h5>
       <p class="card-text">You can explore the CityofTulsaData.com web api here:</p>
-      <a href="https://localhost:44305/swagger" target="_blank" class="btn btn-primary">Web API</a>
+      <a href="@((Model?.PathSettings.WebAPISwaggerURL ?? ""))" target="_blank" class="btn btn-primary">Web API</a>
    </div>
    <div class="card-footer text-muted">
       (Not affiliated with <a href="@((Model?.PathSettings.CityOfTulsaOrgURL ?? ""))" target="_blank">City of Tulsa</a>)

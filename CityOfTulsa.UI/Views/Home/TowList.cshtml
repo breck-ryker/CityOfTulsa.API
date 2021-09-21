@@ -1,0 +1,20 @@
+﻿
+@model CityOfTulsaUI.Models.UserModel
+
+@{
+   ViewData["Title"] = "Search Tow List";
+}
+
+<h5 class="text-muted">@ViewData["Title"]</h5>
+
+@section Styles
+{
+   <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css")" />
+   <link rel="stylesheet" type="text/css" href="@Url.Content("/css/towlist.css")" />
+}
+
+@section Scripts
+{
+   <script src="@Url.Content("/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js")"></script>
+   <script src="@Url.Content("/js/towlist.js")"></script>
+}

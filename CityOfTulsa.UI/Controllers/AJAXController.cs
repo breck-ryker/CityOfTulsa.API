@@ -114,6 +114,24 @@ namespace CityOfTulsaUI.Controllers {
 
                   break;
 
+               case "tfd.show-divisionlist":
+
+                  model.UseTFDDivisionFilter = (msg.data.ToInteger() <= 0 ? false : true);
+
+                  break;
+
+               case "tfd.show-stationlist":
+
+                  model.UseTFDStationFilter = (msg.data.ToInteger() <= 0 ? false : true);
+
+                  break;
+
+               case "tfd.show-vehiclelist":
+
+                  model.UseTFDVehicleFilter = (msg.data.ToInteger() <= 0 ? false : true);
+
+                  break;
+
                case "tfd.select-problem":
 
                   if (!(string.IsNullOrWhiteSpace(msg.context))) {
@@ -131,6 +149,57 @@ namespace CityOfTulsaUI.Controllers {
 
                   break;
 
+               case "tfd.select-division":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context))) {
+                     if (msg.data.ToInteger() > 0) {
+                        if (!(model.TFDDivsions.Contains(msg.context))) {
+                           model.TFDDivsions.Add(msg.context);
+                        }
+                     }
+                     else {
+                        if (model.TFDDivsions.Contains(msg.context)) {
+                           model.TFDDivsions.Remove(msg.context);
+                        }
+                     }
+                  }
+
+                  break;
+
+               case "tfd.select-station":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context))) {
+                     if (msg.data.ToInteger() > 0) {
+                        if (!(model.TFDStations.Contains(msg.context))) {
+                           model.TFDStations.Add(msg.context);
+                        }
+                     }
+                     else {
+                        if (model.TFDStations.Contains(msg.context)) {
+                           model.TFDStations.Remove(msg.context);
+                        }
+                     }
+                  }
+
+                  break;
+
+               case "tfd.select-vehicle":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context))) {
+                     if (msg.data.ToInteger() > 0) {
+                        if (!(model.TFDVehicles.Contains(msg.context))) {
+                           model.TFDVehicles.Add(msg.context);
+                        }
+                     }
+                     else {
+                        if (model.TFDVehicles.Contains(msg.context)) {
+                           model.TFDVehicles.Remove(msg.context);
+                        }
+                     }
+                  }
+
+                  break;
+
                case "tfd.multi-select-problems":
 
                   if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
@@ -139,6 +208,45 @@ namespace CityOfTulsaUI.Controllers {
                      }
                      else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
                         model.TFDProblems.Clear();
+                     }
+                  }
+
+                  break;
+
+               case "tfd.multi-select-divisions":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
+                     if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDDivsions = msg.values.ToList();
+                     }
+                     else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDDivsions.Clear();
+                     }
+                  }
+
+                  break;
+
+               case "tfd.multi-select-stations":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
+                     if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDStations = msg.values.ToList();
+                     }
+                     else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDStations.Clear();
+                     }
+                  }
+
+                  break;
+
+               case "tfd.multi-select-vehicles":
+
+                  if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
+                     if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDVehicles = msg.values.ToList();
+                     }
+                     else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
+                        model.TFDVehicles.Clear();
                      }
                   }
 

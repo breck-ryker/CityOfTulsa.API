@@ -65,6 +65,7 @@ function SetCommonHandlers() {
       }
       else {
          $('#dateoptions_btngrp').addClass('cot-hidden');
+         $('#rowDates + div.cot-validator').addClass('cot-hidden');
       }
 
       if (!(isChecked)) {
@@ -90,24 +91,29 @@ function SetCommonHandlers() {
 
    SetDatepickers();
 
-   $('#show_problemlist').off('change').on('change', function (e) {
+   // activating / deactivating the overall group of options
+   $('input.cot-option-chkbox').off('change').on('change', function (e) {
 
       var $this = $(this);
       var isChecked = $this.prop('checked');
+      var btngrpid = $this.data('btngrpid');
+      var listrowid = $this.data('listrowid');
+      var cmd = $this.data('cotcmd');
 
       if (isChecked) {
-         $('#rowProblemList').removeClass('cot-hidden');
-         $('#problemoptions_btngrp').removeClass('cot-hidden');
+         $('#' + listrowid).removeClass('cot-hidden');
+         $('#' + btngrpid).removeClass('cot-hidden');
       }
       else {
-         $('#rowProblemList').addClass('cot-hidden');
-         $('#problemoptions_btngrp').addClass('cot-hidden');
+         $('#' + listrowid).addClass('cot-hidden');
+         $('#' + btngrpid).addClass('cot-hidden');
       }
 
-      CallAJAX('tfd.show-problemlist', (isChecked ? 1 : 0), null, null, null, true);
+      CallAJAX(cmd, (isChecked ? 1 : 0), null, null, null, true);
    });
 
-   $('input.problem-item').off('change').on('change', function (e) {
+   // checking / unchecking a single item in the list
+   $('input.cot-chkbox-item').off('change').on('change', function (e) {
 
       var $this = $(this);
       var isInUse = $this.data('is-in-use');
@@ -116,20 +122,27 @@ function SetCommonHandlers() {
       }
       var isChecked = $this.prop('checked');
       var $parent = $this.closest('div');
+      var $grpparent = $parent.closest('ul.cot-chkbox-list');
+      var cmd = $grpparent.data('cotcmd');
       var $label = $parent.find('label');
       var lbl = $label.text();
 
-      CallAJAX('tfd.select-problem', (isChecked ? 1 : 0), lbl, null, null, true);
+      CallAJAX(cmd, (isChecked ? 1 : 0), lbl, null, null, true);
    });
 
-   $('#problemoptions_btngrp button').off('click').on('click', function (e) {
+   // clicking a select all / unselect all button
+   $('.cot-selectall-btngrp button').off('click').on('click', function (e) {
 
       var $this = $(this);
       var action = $this.data('action');
-      var $parent, $label, lbl;
+      var $parent, $label, lbl, actiontarget, cmd;
       var ary = [];
 
-      $('input.problem-item').each(function (i, elm) {
+      $parent = $this.parent();
+      actiontarget = $parent.data('actiontarget');
+      cmd = $parent.data('cotcmd');
+
+      $('input.' + actiontarget).each(function (i, elm) {
          var $this = $(elm);
          $this.data('is-in-use', 1);
          $this.prop('checked', (action == 'select-all' ? true : false));
@@ -140,7 +153,7 @@ function SetCommonHandlers() {
          $this.data('is-in-use', 0);
       });
 
-      CallAJAX('tfd.multi-select-problems', null, action, null, ary, true);
+      CallAJAX(cmd, null, action, null, ary, true);
    });
 }
 

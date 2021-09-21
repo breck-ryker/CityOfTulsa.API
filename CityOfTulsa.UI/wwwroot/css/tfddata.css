@@ -4,7 +4,10 @@
 }
 
 #rowDateOptions,
-#rowProblemOptions {
+#rowProblemOptions,
+#rowDivisionOptions,
+#rowStationOptions, 
+#rowVehicleOptions {
    min-height: 32px;
 }
 

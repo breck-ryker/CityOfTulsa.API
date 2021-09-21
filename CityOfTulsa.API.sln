@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityOfTulsa.API", "CityOfTulsa.API\CityOfTulsa.API.csproj", "{5EA0E3CF-7915-4540-B165-638A5781A8B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityOfTulsa.API", "CityOfTulsa.API\CityOfTulsa.API.csproj", "{5EA0E3CF-7915-4540-B165-638A5781A8B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityOfTulsa.Data", "CityOfTulsa.Data\CityOfTulsa.Data.csproj", "{6C1F9734-65F3-4F65-84FE-66AAD514B958}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CityOfTulsa.UI", "CityOfTulsa.UI\CityOfTulsa.UI.csproj", "{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CityOfTulsa.UI", "CityOfTulsa.UI\CityOfTulsa.UI.csproj", "{3CE7194C-DB01-47CC-A2E8-F9E0FE2A64FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
