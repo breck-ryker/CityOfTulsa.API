@@ -1,4 +1,5 @@
-﻿using CityOfTulsaUI.Classes;
+﻿using CityOfTulsaData;
+using CityOfTulsaUI.Classes;
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.do-init-validation":
 
-                  // may expand this block in the future to do other kinds of server-side validation checks, not just for dates.
+                  // may expand this branch in the future to do other kinds of server-side validation checks, not just for dates.
                   payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
 
                   break;

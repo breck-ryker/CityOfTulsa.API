@@ -48,16 +48,19 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("dates")]
-      public IEnumerable<FireEventHelper> Get(string? mindate = null, string? maxdate = null) {
+      public IEnumerable<FireEventHelper> Get(
+         string? mindate = null, 
+         string? maxdate = null
+      ) {
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
 
          return _dbcontext.FireEvents
             .Where(e => 
-               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin) 
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin) 
                && 
-               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
             )
             .Include(e => e.FireVehicles)
             .Select(e => new FireEventHelper(e))
@@ -83,9 +86,9 @@ namespace CityOfTulsaAPI.Controllers {
 
          return _dbcontext.FireEvents
             .Where(e =>
-               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin)
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
                &&
-               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
             )
             .Include(e => e.FireVehicles)
             .Where(e =>
@@ -108,22 +111,94 @@ namespace CityOfTulsaAPI.Controllers {
       [HttpGet("divisions")]
       public IEnumerable<string> GetDivisions(
          string? mindate = null,
-         string? maxdate = null
+         string? maxdate = null,
+         string? problems = null
       ) {
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
 
          return _dbcontext.FireEvents
             .Where(e =>
-               (dtMin == DateTime.MinValue || e.ResponseDate >= dtMin)
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
                &&
-               (dtMax == DateTime.MinValue || e.ResponseDate <= dtMax)
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listProblems.Count == 0 || listProblems.Contains(e.Problem))
             )
             .Include(e => e.FireVehicles)
             .SelectMany(e => e.FireVehicles)
             .Select(v => v.Division)
             .Where(d => !(string.IsNullOrWhiteSpace(d)))
+            .Distinct()
+            .Take(1000)
+            ;
+      }
+
+      [HttpGet("stations")]
+      public IEnumerable<string> GetStations(
+         string? mindate = null,
+         string? maxdate = null,
+         string? problems = null,
+         string? divisions = null
+      ) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
+         List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
+               &&
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listProblems.Count == 0 || listProblems.Contains(e.Problem))
+            )
+            .Include(e => e.FireVehicles)
+            .SelectMany(e => e.FireVehicles)
+            .Where(v => (listDivisions.Count == 0 || listDivisions.Contains(v.Division)))
+            .Select(v => v.Station)
+            .Where(s => !(string.IsNullOrWhiteSpace(s)))
+            .Distinct()
+            .Take(1000)
+            ;
+      }
+
+      [HttpGet("vehicles")]
+      public IEnumerable<string> GetVehicles(
+         string? mindate = null,
+         string? maxdate = null,
+         string? problems = null,
+         string? divisions = null,
+         string? stations = null
+      ) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
+         List<string> listStations = (string.IsNullOrWhiteSpace(stations) ? new List<string>() : stations.Split(',').ToList());
+         List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
+               &&
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listProblems.Count == 0 || listProblems.Contains(e.Problem))
+            )
+            .Include(e => e.FireVehicles)
+            .SelectMany(e => e.FireVehicles)
+            .Where(v => 
+               (listDivisions.Count == 0 || listDivisions.Contains(v.Division)) 
+               && 
+               (listStations.Count == 0 || listStations.Contains(v.Station))
+            )
+            .Select(v => v.VehicleID)
+            .Where(id => !(string.IsNullOrWhiteSpace(id)))
             .Distinct()
             .Take(1000)
             ;

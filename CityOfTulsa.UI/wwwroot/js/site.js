@@ -6,6 +6,10 @@ $(document).ready(function () {
    }
    _commonlib.addListener('_ProcessAJAXCallbackResults', ProcessAJAXCallbackResults_Site);
 
+   $('a.nav-link').off('click').on('click', function (e) {
+      ShowSpinner();
+   });
+
 });
 
 function ProcessAJAXCallbackResults_Site(responseData) {

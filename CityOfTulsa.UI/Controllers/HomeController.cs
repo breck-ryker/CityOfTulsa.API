@@ -66,6 +66,8 @@ namespace CityOfTulsaUI.Controllers {
 
          List<string> problems = null;
          List<string> divisions = null;
+         List<string> stations = null;
+         List<string> vehicles = null;
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Problems.ToString(), out problems))) {
 
@@ -117,8 +119,60 @@ namespace CityOfTulsaUI.Controllers {
             _cache.Set(CacheKeys.COT_API_TFD_Divisions.ToString(), divisions, cacheEntryOptions);
          }
 
+         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Stations.ToString(), out stations))) {
+
+            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDStationsURL));
+            task.Wait();
+            var result = task.Result;
+
+            if (result.IsSuccessStatusCode) {
+
+               var readTask = result.Content.ReadAsStringAsync();
+               readTask.Wait();
+
+               stations = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+            }
+            else {
+               ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
+            }
+
+            // Set cache options.
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
+
+            // Save data in cache.
+            _cache.Set(CacheKeys.COT_API_TFD_Stations.ToString(), stations, cacheEntryOptions);
+         }
+
+         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Vehicles.ToString(), out vehicles))) {
+
+            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDVehiclesURL));
+            task.Wait();
+            var result = task.Result;
+
+            if (result.IsSuccessStatusCode) {
+
+               var readTask = result.Content.ReadAsStringAsync();
+               readTask.Wait();
+
+               vehicles = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+            }
+            else {
+               ModelState.AddModelError(string.Empty, "TFD Vehicle Data: Server Error");
+            }
+
+            // Set cache options.
+            var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
+
+            // Save data in cache.
+            _cache.Set(CacheKeys.COT_API_TFD_Vehicles.ToString(), vehicles, cacheEntryOptions);
+         }
+
          this.ViewBag.Problems = problems;
          this.ViewBag.Divisions = divisions;
+         this.ViewBag.Stations = stations;
+         this.ViewBag.Vehicles = vehicles;
 
          if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 
