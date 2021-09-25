@@ -10,6 +10,13 @@ $(document).ready(function () {
       ShowSpinner();
    });
 
+   $('.cot-cmd-btn').off('click').on('click', function (e) {
+      var $this = $(this);
+      var cmd = $this.data('cotcmd');
+      if (cmd) {
+         CallAJAX(cmd, null, null, null, null, false);
+      }
+   });
 });
 
 function ProcessAJAXCallbackResults_Site(responseData) {

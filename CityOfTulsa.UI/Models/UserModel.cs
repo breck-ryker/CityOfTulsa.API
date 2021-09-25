@@ -16,16 +16,46 @@ namespace CityOfTulsaUI.Models {
 
    public class UserModel {
 
-      private List<string> _problems = null;
-      private List<string> _divisions = null;
-      private List<string> _stations = null;
-      private List<string> _vehicles = null;
+      private QuerySettings _qrySettings = null;
+      private QueryResults _qryResults = null;
+
+      public PathSettings PathSettings { get; set; } = null;
 
       public UserModel(PathSettings pathSettings) {
          this.PathSettings = pathSettings;
       }
 
-      public PathSettings PathSettings { get; set; } = null;
+      public QuerySettings QuerySettings {
+         get {
+            if (_qrySettings == null) {
+               _qrySettings = new QuerySettings();
+            }
+            return _qrySettings;
+         }
+         set {
+            _qrySettings = value;
+         }
+      }
+
+      public QueryResults QueryResults {
+         get {
+            if (_qryResults == null) {
+               _qryResults = new QueryResults();
+            }
+            return _qryResults;
+         }
+         set {
+            _qryResults = value;
+         }
+      }
+   }
+
+   public class QuerySettings {
+
+      private List<string> _problems = null;
+      private List<string> _divisions = null;
+      private List<string> _stations = null;
+      private List<string> _vehicles = null;
 
       public bool UseTFDDateFilter { get; set; } = false;
       public DateFilterType TFDDateFilterType { get; set; } = DateFilterType.OnDate;
@@ -36,12 +66,12 @@ namespace CityOfTulsaUI.Models {
       public DateTime MaxDate { get; set; } = DateTime.MaxValue;
 
       public bool UseTFDProblemFilter { get; set; } = false;
-      public List<string> TFDProblems { 
-         get { 
-            if (_problems == null) { _problems = new List<string>(); } 
-            return _problems; 
+      public List<string> TFDProblems {
+         get {
+            if (_problems == null) { _problems = new List<string>(); }
+            return _problems;
          }
-         set { _problems = value; } 
+         set { _problems = value; }
       }
 
       public bool UseTFDDivisionFilter { get; set; } = false;
@@ -70,5 +100,10 @@ namespace CityOfTulsaUI.Models {
          }
          set { _vehicles = value; }
       }
+   }
+
+   public class QueryResults {
+
+      public int TFDEventsCountResult { get; set; } = Int32.MinValue;
    }
 }

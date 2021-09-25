@@ -20,21 +20,21 @@ namespace CityOfTulsaUI.Classes {
 
       public static int validateDateFilters(UserModel model, ref AJAXPayload payload) {
 
-         if (model.UseTFDDateFilter) {
+         if (model.QuerySettings.UseTFDDateFilter) {
 
             // about the MinDateText and MaxDateText...and msgmode:
             // it's kind of harsh to complain to the user that their dates are invalid if they've not actually yet entered/selected anything,
             // and they're maybe just clicking around.  Let's not complain until they've entered something OR are trying to submit the search.
 
-            switch (model.TFDDateFilterType) {
+            switch (model.QuerySettings.TFDDateFilterType) {
 
                case DateFilterType.OnDate:
                case DateFilterType.AfterDate:
                case DateFilterType.BeforeDate:
 
-                  if (!(model.MinDate.IsValidValue())) {
+                  if (!(model.QuerySettings.MinDate.IsValidValue())) {
                      payload.msg = "Date is invalid. Please enter a valid date.";
-                     if (string.IsNullOrWhiteSpace(model.MinDateText)) {
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MinDateText)) {
                         payload.msgmode = "no-user-entry";
                      }
                      return -1;
@@ -44,22 +44,22 @@ namespace CityOfTulsaUI.Classes {
 
                case DateFilterType.BetweenDates:
 
-                  if (!(model.MinDate.IsValidValue())) {
+                  if (!(model.QuerySettings.MinDate.IsValidValue())) {
                      payload.msg = "Range start date is invalid. Please enter a valid start date.";
-                     if (string.IsNullOrWhiteSpace(model.MinDateText)) {
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MinDateText)) {
                         payload.msgmode = "no-user-entry";
                      }
                      return -1;
                   }
-                  else if (!(model.MaxDate.IsValidValue())) {
+                  else if (!(model.QuerySettings.MaxDate.IsValidValue())) {
                      payload.msg = "Range end date is invalid. Please enter a valid end date.";
-                     if (string.IsNullOrWhiteSpace(model.MaxDateText)) {
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MaxDateText)) {
                         payload.msgmode = "no-user-entry";
                      }
                      return -1;
                   }
-                  else if (model.MaxDate <= model.MinDate) {
-                     if (string.IsNullOrWhiteSpace(model.MinDateText) && string.IsNullOrWhiteSpace(model.MaxDateText)) {
+                  else if (model.QuerySettings.MaxDate <= model.QuerySettings.MinDate) {
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MinDateText) && string.IsNullOrWhiteSpace(model.QuerySettings.MaxDateText)) {
                         payload.msgmode = "no-user-entry";
                      }
                      payload.msg = "Range's start date must precede its end date. To use only one date, select the On Date option.";

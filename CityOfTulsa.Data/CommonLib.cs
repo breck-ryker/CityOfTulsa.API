@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaData {
@@ -116,6 +118,36 @@ namespace CityOfTulsaData {
          }
       }
 
+      public static bool ToBoolean(this string text) {
+
+         if (string.IsNullOrWhiteSpace(text)) {
+            return false;
+         }
+
+         switch (text.Trim().ToLower()) {
+            case "1":
+            case "y":
+            case "t":
+            case "yes":
+               return true;
+            case "0":
+            case "n":
+            case "f":
+            case "no":
+               return false;
+            default:
+               if (text.IsNumeric()) {
+                  if (text.ToInteger() > 0) {
+                     return true;
+                  }
+                  else {
+                     return false;
+                  }
+               }
+               return Convert.ToBoolean(text);
+         }
+      }
+
       public static string ToSpacedOutTextByCaps(this string text) {
 
          string sReturnValue = string.Concat(text.Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
@@ -178,7 +210,7 @@ namespace CityOfTulsaData {
          return text.SetDelimiter(delimiter, false);
       }
 
-      public static string SetDelimiter(this string text, string delimiter, bool bIncludeComma) {
+      public static string SetDelimiter(this string text, string delimiter, bool includeComma) {
 
          if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(delimiter)) {
             return text;
@@ -186,7 +218,7 @@ namespace CityOfTulsaData {
 
          text = text.Replace("<br/>", delimiter).Replace("<br />", delimiter).Replace("\r\n", delimiter);
 
-         if (bIncludeComma) {
+         if (includeComma) {
             text = text.Replace(",", delimiter);
          }
 

@@ -33,6 +33,20 @@ function ProcessAJAXCallbackResults_TFDData(responseData) {
          CheckForInvalidDateMessage(responseData, 0);
 
          break;
+
+      case 'tfd.run-search':
+
+         var returnval = responseData.parameters.returncode;
+
+         if (returnval > 0) {
+            $('#show_results').text(' ' + returnval + ' Results');
+            $('.cot-results-btn').removeClass('cot-hidden');
+         }
+         else {
+            $('.cot-results-btn').addClass('cot-hidden');
+         }
+
+         break;
    }
 }
 

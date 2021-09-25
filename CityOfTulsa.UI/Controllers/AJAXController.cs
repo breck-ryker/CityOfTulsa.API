@@ -20,7 +20,7 @@ namespace CityOfTulsaUI.Controllers {
 
       private readonly IConfiguration _config = null;
       private readonly ILogger<HomeController> _logger;
-      //private static readonly HttpClient _httpClient = new();
+      private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
       private readonly PathSettings _pathSettings;
 
@@ -71,20 +71,20 @@ namespace CityOfTulsaUI.Controllers {
 
                         case "mindate":
 
-                           model.MinDateText = msg.data;
+                           model.QuerySettings.MinDateText = msg.data;
 
                            if (dt.IsValidValue()) {
-                              model.MinDate = dt;
+                              model.QuerySettings.MinDate = dt;
                            }
 
                            break;
 
                         case "maxdate":
 
-                           model.MaxDateText = msg.data;
+                           model.QuerySettings.MaxDateText = msg.data;
 
                            if (dt.IsValidValue()) {
-                              model.MaxDate = dt;
+                              model.QuerySettings.MaxDate = dt;
                            }
 
                            break;
@@ -97,13 +97,13 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.show-datefilter-options":
 
-                  model.UseTFDDateFilter = (msg.data.ToInteger() <= 0 ? false : true);
+                  model.QuerySettings.UseTFDDateFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
                case "tfd.set-datefilter-option":
 
-                  model.TFDDateFilterType = (DateFilterType)msg.data.ToInteger();
+                  model.QuerySettings.TFDDateFilterType = (DateFilterType)msg.data.ToInteger();
 
                   payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
 
@@ -111,25 +111,25 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.show-problemlist":
 
-                  model.UseTFDProblemFilter = (msg.data.ToInteger() <= 0 ? false : true);
+                  model.QuerySettings.UseTFDProblemFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
                case "tfd.show-divisionlist":
 
-                  model.UseTFDDivisionFilter = (msg.data.ToInteger() <= 0 ? false : true);
+                  model.QuerySettings.UseTFDDivisionFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
                case "tfd.show-stationlist":
 
-                  model.UseTFDStationFilter = (msg.data.ToInteger() <= 0 ? false : true);
+                  model.QuerySettings.UseTFDStationFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
                case "tfd.show-vehiclelist":
 
-                  model.UseTFDVehicleFilter = (msg.data.ToInteger() <= 0 ? false : true);
+                  model.QuerySettings.UseTFDVehicleFilter = (msg.data.ToInteger() <= 0 ? false : true);
 
                   break;
 
@@ -137,13 +137,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context))) {
                      if (msg.data.ToInteger() > 0) {
-                        if (!(model.TFDProblems.Contains(msg.context))) {
-                           model.TFDProblems.Add(msg.context);
+                        if (!(model.QuerySettings.TFDProblems.Contains(msg.context))) {
+                           model.QuerySettings.TFDProblems.Add(msg.context);
                         }
                      }
                      else {
-                        if (model.TFDProblems.Contains(msg.context)) {
-                           model.TFDProblems.Remove(msg.context);
+                        if (model.QuerySettings.TFDProblems.Contains(msg.context)) {
+                           model.QuerySettings.TFDProblems.Remove(msg.context);
                         }
                      }
                   }
@@ -154,13 +154,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context))) {
                      if (msg.data.ToInteger() > 0) {
-                        if (!(model.TFDDivsions.Contains(msg.context))) {
-                           model.TFDDivsions.Add(msg.context);
+                        if (!(model.QuerySettings.TFDDivsions.Contains(msg.context))) {
+                           model.QuerySettings.TFDDivsions.Add(msg.context);
                         }
                      }
                      else {
-                        if (model.TFDDivsions.Contains(msg.context)) {
-                           model.TFDDivsions.Remove(msg.context);
+                        if (model.QuerySettings.TFDDivsions.Contains(msg.context)) {
+                           model.QuerySettings.TFDDivsions.Remove(msg.context);
                         }
                      }
                   }
@@ -171,13 +171,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context))) {
                      if (msg.data.ToInteger() > 0) {
-                        if (!(model.TFDStations.Contains(msg.context))) {
-                           model.TFDStations.Add(msg.context);
+                        if (!(model.QuerySettings.TFDStations.Contains(msg.context))) {
+                           model.QuerySettings.TFDStations.Add(msg.context);
                         }
                      }
                      else {
-                        if (model.TFDStations.Contains(msg.context)) {
-                           model.TFDStations.Remove(msg.context);
+                        if (model.QuerySettings.TFDStations.Contains(msg.context)) {
+                           model.QuerySettings.TFDStations.Remove(msg.context);
                         }
                      }
                   }
@@ -188,13 +188,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context))) {
                      if (msg.data.ToInteger() > 0) {
-                        if (!(model.TFDVehicles.Contains(msg.context))) {
-                           model.TFDVehicles.Add(msg.context);
+                        if (!(model.QuerySettings.TFDVehicles.Contains(msg.context))) {
+                           model.QuerySettings.TFDVehicles.Add(msg.context);
                         }
                      }
                      else {
-                        if (model.TFDVehicles.Contains(msg.context)) {
-                           model.TFDVehicles.Remove(msg.context);
+                        if (model.QuerySettings.TFDVehicles.Contains(msg.context)) {
+                           model.QuerySettings.TFDVehicles.Remove(msg.context);
                         }
                      }
                   }
@@ -205,10 +205,10 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
                      if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDProblems = msg.values.ToList();
+                        model.QuerySettings.TFDProblems = msg.values.ToList();
                      }
                      else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDProblems.Clear();
+                        model.QuerySettings.TFDProblems.Clear();
                      }
                   }
 
@@ -218,10 +218,10 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
                      if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDDivsions = msg.values.ToList();
+                        model.QuerySettings.TFDDivsions = msg.values.ToList();
                      }
                      else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDDivsions.Clear();
+                        model.QuerySettings.TFDDivsions.Clear();
                      }
                   }
 
@@ -231,10 +231,10 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
                      if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDStations = msg.values.ToList();
+                        model.QuerySettings.TFDStations = msg.values.ToList();
                      }
                      else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDStations.Clear();
+                        model.QuerySettings.TFDStations.Clear();
                      }
                   }
 
@@ -244,11 +244,39 @@ namespace CityOfTulsaUI.Controllers {
 
                   if (!(string.IsNullOrWhiteSpace(msg.context)) && msg.values != null && msg.values.Length > 0) {
                      if (msg.context.Equals("select-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDVehicles = msg.values.ToList();
+                        model.QuerySettings.TFDVehicles = msg.values.ToList();
                      }
                      else if (msg.context.Equals("unselect-all", StringComparison.OrdinalIgnoreCase)) {
-                        model.TFDVehicles.Clear();
+                        model.QuerySettings.TFDVehicles.Clear();
                      }
+                  }
+
+                  break;
+
+               case "tfd.run-search":
+
+                  DateTime minDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MinDate : DateTime.MinValue);
+                  DateTime maxDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MaxDate : DateTime.MinValue);
+                  string problems = (model.QuerySettings.UseTFDProblemFilter && model.QuerySettings.TFDProblems.Count > 0 ? string.Join(",", model.QuerySettings.TFDProblems) : null);
+                  string divisions = (model.QuerySettings.UseTFDDivisionFilter && model.QuerySettings.TFDDivsions.Count > 0 ? string.Join(",", model.QuerySettings.TFDDivsions) : null);
+                  string stations = (model.QuerySettings.UseTFDStationFilter && model.QuerySettings.TFDStations.Count > 0 ? string.Join(",", model.QuerySettings.TFDStations) : null);
+                  string vehicles = (model.QuerySettings.UseTFDVehicleFilter && model.QuerySettings.TFDVehicles.Count > 0 ? string.Join(",", model.QuerySettings.TFDVehicles) : null);
+
+                  var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDEventCountURL));
+                  task.Wait();
+                  var result = task.Result;
+
+                  if (result.IsSuccessStatusCode) {
+
+                     var readTask = result.Content.ReadAsStringAsync();
+                     readTask.Wait();
+
+                     model.QueryResults.TFDEventsCountResult = JsonConvert.DeserializeObject<int>(readTask.Result);
+                     payload.returncode = model.QueryResults.TFDEventsCountResult.ToString();
+                  }
+                  else {
+                     ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
+                     payload.returncode = (-1).ToString();
                   }
 
                   break;

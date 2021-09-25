@@ -105,3 +105,20 @@ ul.navbar-nav li.nav-item {
 .datepicker.datepicker-dropdown.dropdown-menu {
    border:2px solid orange;
 }
+
+.cot-search-btn {
+   position:fixed;
+   right:0;
+   top:3.3rem;
+   background-color:dimgray;
+   color:white;
+   border:none;
+}
+
+.cot-results-btn {
+   position: fixed;
+   right: 0;
+   top: 6.0rem;
+   color: white;
+   border: none;
+}

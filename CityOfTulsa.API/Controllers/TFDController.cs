@@ -111,6 +111,48 @@ namespace CityOfTulsaAPI.Controllers {
             ;
       }
 
+      [HttpGet("eventcount")]
+      public int GetEventCount(
+         string? mindate = null,
+         string? maxdate = null,
+         string? problems = null,
+         string? divisions = null,
+         string? stations = null,
+         string? vehicles = null
+      ) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
+         List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
+         List<string> listStations = (string.IsNullOrWhiteSpace(stations) ? new List<string>() : stations.Split(',').ToList());
+         List<string> listVehicles = (string.IsNullOrWhiteSpace(vehicles) ? new List<string>() : vehicles.Split(',').ToList());
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
+               &&
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listProblems.Count == 0 || listProblems.Contains(e.Problem))
+            )
+            .Where(e =>
+               e.FireVehicles
+               .Where(v =>
+                  (listDivisions.Count == 0 || listDivisions.Contains(v.Division))
+                  &&
+                  (listStations.Count == 0 || listStations.Contains(v.Station))
+                  &&
+                  (listVehicles.Count == 0 || listVehicles.Contains(v.FireVehicleID.ToString()) || listVehicles.Contains(v.VehicleID))
+               ).Any()
+            )
+            .Select(e => new FireEventHelper(e))
+            .OrderBy(e => e.ResponseDate)
+            .Distinct()
+            .Count()
+            ;
+      }
+
       [HttpGet("problems")]
       public IEnumerable<string> GetProblems(
          string? mindate = null, 
