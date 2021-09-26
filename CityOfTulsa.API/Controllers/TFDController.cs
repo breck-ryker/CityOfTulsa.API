@@ -147,8 +147,7 @@ namespace CityOfTulsaAPI.Controllers {
                ).Any()
             )
             .Select(e => new FireEventHelper(e))
-            .OrderBy(e => e.ResponseDate)
-            .Distinct()
+            //.OrderBy(e => e.ResponseDate)
             .Count()
             ;
       }

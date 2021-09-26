@@ -1,14 +1,27 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace CityOfTulsaData {
-   
+
    static class CommonLib {
+   }
+
+   public static class GeneralExtensions {
+
+      public static List<T> Clone<T>(this List<T> listSource) {
+
+         List<T> listClone = new();
+
+         foreach (T item in listSource) {
+            listClone.Add(item);
+         }
+
+         return listClone;
+      }
    }
 
    public static class StringExtensions {

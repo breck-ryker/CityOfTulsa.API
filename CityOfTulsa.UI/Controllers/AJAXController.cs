@@ -3,11 +3,13 @@ using CityOfTulsaUI.Classes;
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using ObjectsComparer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +49,9 @@ namespace CityOfTulsaUI.Controllers {
          if (model == null) {
             model = new UserModel(_pathSettings);
          }
+
+         model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
+         model.PrevQuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.PrevQuerySettings");
 
          try {
 
@@ -262,7 +267,21 @@ namespace CityOfTulsaUI.Controllers {
                   string stations = (model.QuerySettings.UseTFDStationFilter && model.QuerySettings.TFDStations.Count > 0 ? string.Join(",", model.QuerySettings.TFDStations) : null);
                   string vehicles = (model.QuerySettings.UseTFDVehicleFilter && model.QuerySettings.TFDVehicles.Count > 0 ? string.Join(",", model.QuerySettings.TFDVehicles) : null);
 
-                  var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDEventCountURL));
+                  var qryString = new Dictionary<string, string>() 
+                  {
+                     { "mindate", minDate.ToString("MM/dd/yyyy") },
+                     { "maxdate", maxDate.ToString("MM/dd/yyyy") },
+                     { "problems", problems },
+                     { "divisions", divisions },
+                     { "stations", stations },
+                     { "vehicles", vehicles }
+                  };
+
+                  model.ExecuteQuery();
+
+                  string url = QueryHelpers.AddQueryString(_pathSettings.TFDEventCountURL, qryString);
+
+                  var task = Task.Run(() => _httpClient.GetAsync(url));
                   task.Wait();
                   var result = task.Result;
 
@@ -271,8 +290,8 @@ namespace CityOfTulsaUI.Controllers {
                      var readTask = result.Content.ReadAsStringAsync();
                      readTask.Wait();
 
-                     model.QueryResults.TFDEventsCountResult = JsonConvert.DeserializeObject<int>(readTask.Result);
-                     payload.returncode = model.QueryResults.TFDEventsCountResult.ToString();
+                     model.TFDEventsCountResult = JsonConvert.DeserializeObject<int>(readTask.Result);
+                     payload.returncode = model.TFDEventsCountResult.ToString();
                   }
                   else {
                      ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
@@ -281,6 +300,18 @@ namespace CityOfTulsaUI.Controllers {
 
                   break;
             }
+
+            if (model.PrevQuerySettings == null) {
+               payload.dict["settings-has-changes"] = "y";
+            }
+            else { 
+               Comparer comparer = new();
+               IEnumerable<Difference> diffs;
+               bool isEqual = comparer.Compare(model.QuerySettings, model.PrevQuerySettings, out diffs);
+               payload.dict["search-has-changes"] = (isEqual ? "n" : "y");
+            }
+
+            payload.dict["tfd-search-results-count"] = model.TFDEventsCountResult.ToString();
          }
          catch (System.Exception ex) {
 
@@ -291,6 +322,8 @@ namespace CityOfTulsaUI.Controllers {
          }
 
          HttpContext.Session.Set("UserModel", model);
+         HttpContext.Session.Set("UserModel.QuerySettings", model.QuerySettings);
+         HttpContext.Session.Set("UserModel.PrevQuerySettings", model.PrevQuerySettings);
 
          JsonResult jsonResult = new(
             JsonConvert.SerializeObject(payload)

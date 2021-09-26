@@ -39,14 +39,41 @@ function ProcessAJAXCallbackResults_TFDData(responseData) {
          var returnval = responseData.parameters.returncode;
 
          if (returnval > 0) {
-            $('#show_results').text(' ' + returnval + ' Results');
+            $('#show_results').text(returnval + ' Results');
             $('.cot-results-btn').removeClass('cot-hidden');
+            $('.cot-noresults-btn').addClass('cot-hidden');
          }
          else {
             $('.cot-results-btn').addClass('cot-hidden');
+            $('.cot-noresults-btn').removeClass('cot-hidden');
          }
 
          break;
+   }
+
+   if (responseData.parameters.dict && responseData.parameters.dict['search-has-changes']) {
+
+      var search_results_count = -1;
+      var has_changes = responseData.parameters.dict['search-has-changes'];
+
+      if (responseData.parameters.dict && responseData.parameters.dict['tfd-search-results-count']) {
+         search_results_count = responseData.parameters.dict['tfd-search-results-count'];
+      }
+
+      if (has_changes == 'y') {
+         $('.cot-results-btn').addClass('cot-hidden');
+         $('.cot-noresults-btn').addClass('cot-hidden');
+      }
+      else if (has_changes == 'n') {
+         if (search_results_count > 0) {
+            $('.cot-results-btn').removeClass('cot-hidden');
+            $('.cot-noresults-btn').addClass('cot-hidden');
+         }
+         else {
+            $('.cot-results-btn').addClass('cot-hidden');
+            $('.cot-noresults-btn').removeClass('cot-hidden');
+         }
+      }
    }
 }
 

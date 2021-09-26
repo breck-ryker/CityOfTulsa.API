@@ -1,4 +1,5 @@
-﻿using CityOfTulsaUI.Classes;
+﻿using CityOfTulsaData;
+using CityOfTulsaUI.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,14 @@ namespace CityOfTulsaUI.Models {
    public class UserModel {
 
       private QuerySettings _qrySettings = null;
-      private QueryResults _qryResults = null;
 
       public PathSettings PathSettings { get; set; } = null;
 
       public UserModel(PathSettings pathSettings) {
          this.PathSettings = pathSettings;
       }
+
+      public QuerySettings PrevQuerySettings { get; set; } = null;
 
       public QuerySettings QuerySettings {
          get {
@@ -37,17 +39,11 @@ namespace CityOfTulsaUI.Models {
          }
       }
 
-      public QueryResults QueryResults {
-         get {
-            if (_qryResults == null) {
-               _qryResults = new QueryResults();
-            }
-            return _qryResults;
-         }
-         set {
-            _qryResults = value;
-         }
+      public void ExecuteQuery() {
+         this.PrevQuerySettings = this.QuerySettings.DeepCopy();
       }
+
+      public int TFDEventsCountResult { get; set; } = Int32.MinValue;
    }
 
    public class QuerySettings {
@@ -100,10 +96,19 @@ namespace CityOfTulsaUI.Models {
          }
          set { _vehicles = value; }
       }
-   }
 
-   public class QueryResults {
+      public QuerySettings ShallowCopy() {
+         return (QuerySettings)this.MemberwiseClone();
+      }
 
-      public int TFDEventsCountResult { get; set; } = Int32.MinValue;
+      public QuerySettings DeepCopy() {
+         QuerySettings clone = (QuerySettings)this.MemberwiseClone();
+         //QuerySettings clone = new();
+         clone.TFDDivsions = this.TFDDivsions.Clone();
+         clone.TFDProblems = this.TFDProblems.Clone();
+         clone.TFDStations = this.TFDStations.Clone();
+         clone.TFDVehicles = this.TFDVehicles.Clone();
+         return clone;
+      }
    }
 }

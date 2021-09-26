@@ -110,15 +110,23 @@ ul.navbar-nav li.nav-item {
    position:fixed;
    right:0;
    top:3.3rem;
-   background-color:dimgray;
-   color:white;
    border:none;
+   box-shadow:none;
 }
 
-.cot-results-btn {
+.cot-results-btn,
+.cot-noresults-btn {
    position: fixed;
    right: 0;
    top: 6.0rem;
    color: white;
    border: none;
+   box-shadow:none;
+}
+
+.cot-search-btn:focus,
+.cot-results-btn:focus,
+.cot-noresults-btn:focus {
+   outline: none;
+   box-shadow:none;
 }
