@@ -55,7 +55,7 @@ namespace CityOfTulsaUI.Controllers {
 
          try {
 
-            payload.timetext = System.DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss-fff");
+            payload.timetext = DateTime.Now.ToString("yyyy-MM-ddTHH-mm-ss-fff");
 
             switch ((msg.cmd ?? "").Trim().ToLower()) {
 

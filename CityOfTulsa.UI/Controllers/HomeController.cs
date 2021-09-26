@@ -1,6 +1,8 @@
-﻿using CityOfTulsaUI.Classes;
+﻿using CityOfTulsaData;
+using CityOfTulsaUI.Classes;
 using CityOfTulsaUI.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -56,7 +58,7 @@ namespace CityOfTulsaUI.Controllers {
          return View(model);
       }
 
-      public IActionResult TFDData() {
+      public IActionResult TFDSearch() {
 
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
@@ -177,6 +179,58 @@ namespace CityOfTulsaUI.Controllers {
          if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
 
          HttpContext.Session.Set("UserModel", model);
+
+         return View(model);
+      }
+
+      public IActionResult TFDResults() {
+
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (model == null) {
+            model = new UserModel(_pathSettings);
+         }
+
+         model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
+         model.PrevQuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.PrevQuerySettings");
+
+         DateTime minDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MinDate : DateTime.MinValue);
+         DateTime maxDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MaxDate : DateTime.MinValue);
+         string problems = (model.QuerySettings.UseTFDProblemFilter && model.QuerySettings.TFDProblems.Count > 0 ? string.Join(",", model.QuerySettings.TFDProblems) : null);
+         string divisions = (model.QuerySettings.UseTFDDivisionFilter && model.QuerySettings.TFDDivsions.Count > 0 ? string.Join(",", model.QuerySettings.TFDDivsions) : null);
+         string stations = (model.QuerySettings.UseTFDStationFilter && model.QuerySettings.TFDStations.Count > 0 ? string.Join(",", model.QuerySettings.TFDStations) : null);
+         string vehicles = (model.QuerySettings.UseTFDVehicleFilter && model.QuerySettings.TFDVehicles.Count > 0 ? string.Join(",", model.QuerySettings.TFDVehicles) : null);
+
+         var qryString = new Dictionary<string, string>()
+         {
+            { "mindate", minDate.ToString("MM/dd/yyyy") },
+            { "maxdate", maxDate.ToString("MM/dd/yyyy") },
+            { "problems", problems },
+            { "divisions", divisions },
+            { "stations", stations },
+            { "vehicles", vehicles }
+         };
+
+         string url = QueryHelpers.AddQueryString(_pathSettings.TFDEventsURL, qryString);
+
+         var task = Task.Run(() => _httpClient.GetAsync(url));
+         task.Wait();
+         var result = task.Result;
+
+         if (result.IsSuccessStatusCode) {
+
+            var readTask = result.Content.ReadAsStringAsync();
+            readTask.Wait();
+
+            IEnumerable<FireEventHelper> events = JsonConvert.DeserializeObject<IEnumerable<FireEventHelper>>(readTask.Result);
+
+            ViewBag.FireEvents = events;
+         }
+         else {
+            ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
+
+            ViewBag.FireEvents = null;
+         }
 
          return View(model);
       }

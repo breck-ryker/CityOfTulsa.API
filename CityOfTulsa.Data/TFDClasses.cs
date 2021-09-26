@@ -47,21 +47,24 @@ namespace CityOfTulsaData {
 
    public class FireEventHelper {
 
-      public FireEventHelper(FireEvent fireEvent) {
-         this.FireEventID = fireEvent.FireEventID;
-         this.IncidentNumber = fireEvent.IncidentNumber;
-         this.Problem = fireEvent.Problem;
-         this.Address = fireEvent.Address;
-         this.ResponseDate = fireEvent.ResponseDate;
-         this.Latitude = fireEvent.Latitude;
-         this.Longitude = fireEvent.Longitude;
-         this.DateLastUpdated = fireEvent.DateLastUpdated;
+      public FireEventHelper(FireEvent fe) {
 
-         if (fireEvent.FireVehicles != null && fireEvent.FireVehicles.Count > 0) {
+         if (fe == null) { return; }
+
+         this.FireEventID = fe.FireEventID;
+         this.IncidentNumber = fe.IncidentNumber;
+         this.Problem = fe.Problem;
+         this.Address = fe.Address;
+         this.ResponseDate = fe.ResponseDate;
+         this.Latitude = fe.Latitude;
+         this.Longitude = fe.Longitude;
+         this.DateLastUpdated = fe.DateLastUpdated;
+
+         if (fe.FireVehicles != null && fe.FireVehicles.Count > 0) {
 
             this.FireVehicles = new List<FireVehicleHelper>();
 
-            foreach (FireVehicle fv in fireEvent.FireVehicles) {
+            foreach (FireVehicle fv in fe.FireVehicles) {
                this.FireVehicles.Add(new FireVehicleHelper(fv));
             }
          }
@@ -81,12 +84,15 @@ namespace CityOfTulsaData {
 
    public class FireVehicleHelper {
 
-      public FireVehicleHelper(FireVehicle fireVehicle) {
-         this.FireVehicleID = fireVehicle.FireVehicleID;
-         this.Division = fireVehicle.Division;
-         this.Station = fireVehicle.Station;
-         this.VehicleID = fireVehicle.VehicleID;
-         this.DateLastUpdated = fireVehicle.DateLastUpdated;
+      public FireVehicleHelper(FireVehicle fv) {
+
+         if (fv == null) { return; }
+
+         this.FireVehicleID = fv.FireVehicleID;
+         this.Division = fv.Division;
+         this.Station = fv.Station;
+         this.VehicleID = fv.VehicleID;
+         this.DateLastUpdated = fv.DateLastUpdated;
       }
 
       public int FireVehicleID { get; set; }
