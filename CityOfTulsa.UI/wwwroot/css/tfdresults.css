@@ -26,3 +26,11 @@ td.map-launcher {
    cursor:pointer;
    text-decoration:underline;
 }
+
+tr.dt-hasChild.shown + tr {
+   background-color:dimgray;
+}
+
+table.tfd-fireevent-detail {
+   background-color:white;
+}

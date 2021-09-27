@@ -16,21 +16,7 @@ $(document).ready(function () {
          'ordering': true,
          'lengthMenu': [[10, 15, 20, 25, 50, -1], [10, 15, 20, 25, 50, 'All']],
          'order': [[2, 'asc']],
-         'autoWidth': false//,
-         //'columns': [
-         //   {
-         //      'className': 'details-control',
-         //      'orderable': false,
-         //      'data': null,
-         //      'defaultContent': ''
-         //   }//,
-            //{ 'data': 'Incident #' },
-            //{ 'data': 'Problem' },
-            //{ 'data': 'Response Date' },
-            //{ 'data': 'Address' },
-            //{ 'data': 'Latitude' },
-            //{ 'data': 'Longitude' }
-         //]
+         'autoWidth': false
       });
 
    $('#search_results tbody').on('click', 'td.details-control', function () {
@@ -47,7 +33,6 @@ $(document).ready(function () {
       }
       else {
          // Open this row
-         //row.child(format(row.data())).show();
          $row.child('<div class="cot-fireevent-detail" data-incidentid="' + incidentid + '"></div>').show();
          $tr.addClass('shown');
          CallAJAX('tfd-results.get-event-vehicles', null, null, [(incidentid || '')], null, false, null);
@@ -63,7 +48,6 @@ $(document).ready(function () {
       var lat = data[5];
       var lon = data[6];
 
-      //https://www.google.com/maps/search/?api=1&query=47.5951518%2C-122.3316393
       var url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(lat + ',' + lon);
       window.open(url, '_blank');
    });
@@ -77,14 +61,6 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
    }
 
    switch ((responseData.parameters.cmd || '').toLowerCase()) {
-
-      case 'tfd-results.open-map':
-
-         if (responseData.parameters.url) {
-            window.open(responseData.parameters.url, '_blank');
-         }
-
-         break;
 
       case 'tfd-results.get-event-vehicles':
 
@@ -104,7 +80,7 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
             if ($details && $details.length == 1) {
 
                var outlineMarkup = `
-                  <table>
+                  <table class="tfd-fireevent-detail ml-5">
                      <thead><tr><th>Division</th><th>Station</th><th>Vehicle</th></tr></thead>
                      <tbody>{body}</tbody>
                   </table>
