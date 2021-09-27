@@ -110,5 +110,33 @@ namespace CityOfTulsaUI.Models {
          clone.TFDVehicles = this.TFDVehicles.Clone();
          return clone;
       }
+
+      public DateTime DisplayDate1 {
+         get {
+            switch (this.TFDDateFilterType) {
+               case DateFilterType.AfterDate:
+                  return this.MinDate;
+               case DateFilterType.BeforeDate:
+                  return this.MaxDate;
+               case DateFilterType.BetweenDates:
+                  return this.MinDate;
+               case DateFilterType.OnDate:
+                  return this.MinDate;
+               default:
+                  return DateTime.MinValue;
+            }
+         }
+      }
+
+      public DateTime DisplayDate2 {
+         get {
+            switch (this.TFDDateFilterType) {
+               case DateFilterType.BetweenDates:
+                  return this.MaxDate;
+               default:
+                  return DateTime.MinValue;
+            }
+         }
+      }
    }
 }

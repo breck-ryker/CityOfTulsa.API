@@ -76,10 +76,10 @@ namespace CityOfTulsaUI.Controllers {
 
                      switch (model.QuerySettings.TFDDateFilterType) {
                         case DateFilterType.AfterDate:
-                           model.QuerySettings.MaxDate = DateTime.MaxValue;
+                           model.QuerySettings.MaxDate = DateTime.MaxValue;  // clear the maxdate if they're assigning a mindate here.
                            break;
                         case DateFilterType.BeforeDate:
-                           msg.context = "maxdate";
+                           msg.context = "maxdate";  // it was a control labeled mindate, but here they're really setting a maxdate in this context.
                            model.QuerySettings.MinDate = DateTime.MinValue;
                            break;
                      }
@@ -101,6 +101,7 @@ namespace CityOfTulsaUI.Controllers {
                            model.QuerySettings.MaxDateText = msg.data;
 
                            if (dt.IsValidValue()) {
+                              dt = dt.AddDays(1).AddSeconds(-1);  // if they choose 9/26 as their end date, we're going to assume they mean ALL of that end date, not chop it at midnight.
                               model.QuerySettings.MaxDate = dt;
                            }
 
@@ -124,7 +125,66 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.set-datefilter-option":
 
+                  DateFilterType prevDateFilter = model.QuerySettings.TFDDateFilterType;
                   model.QuerySettings.TFDDateFilterType = (DateFilterType)msg.data.ToInteger();
+
+                  switch (prevDateFilter) {
+                     case DateFilterType.AfterDate:
+                        switch (model.QuerySettings.TFDDateFilterType) {
+                           case DateFilterType.BeforeDate:
+                              model.QuerySettings.MaxDate = model.QuerySettings.MinDate;
+                              model.QuerySettings.MinDate = DateTime.MinValue;
+                              break;
+                           case DateFilterType.OnDate:
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              break;
+                        }
+                        break;
+                     case DateFilterType.BeforeDate:
+                        switch (model.QuerySettings.TFDDateFilterType) {
+                           case DateFilterType.AfterDate:
+                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
+                              model.QuerySettings.MaxDate = DateTime.MaxValue;
+                              break;
+                           case DateFilterType.BetweenDates:
+                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
+                              model.QuerySettings.MaxDate = DateTime.MinValue;
+                              break;
+                           case DateFilterType.OnDate:
+                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              break;
+                        }
+                        break;
+                     case DateFilterType.BetweenDates:
+                        switch (model.QuerySettings.TFDDateFilterType) {
+                           case DateFilterType.AfterDate:
+                              model.QuerySettings.MaxDate = DateTime.MaxValue;
+                              model.QuerySettings.MinDate = model.QuerySettings.MinDate;
+                              break;
+                           case DateFilterType.BeforeDate:
+                              model.QuerySettings.MinDate = DateTime.MinValue;
+                              break;
+                           case DateFilterType.OnDate:
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              break;
+                        }
+                        break;
+                     case DateFilterType.OnDate:
+                        switch (model.QuerySettings.TFDDateFilterType) {
+                           case DateFilterType.AfterDate:
+                              model.QuerySettings.MaxDate = DateTime.MaxValue;
+                              break;
+                           case DateFilterType.BeforeDate:
+                              model.QuerySettings.MinDate = DateTime.MinValue;
+                              model.QuerySettings.MaxDate = model.QuerySettings.MinDate;
+                              break;
+                           case DateFilterType.BetweenDates:
+                              model.QuerySettings.MaxDate = DateTime.MinValue;
+                              break;
+                        }
+                        break;
+                  }
 
                   payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
 

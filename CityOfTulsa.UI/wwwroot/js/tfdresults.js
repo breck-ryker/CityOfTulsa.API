@@ -15,7 +15,7 @@ $(document).ready(function () {
          'paging': true,
          'ordering': true,
          'lengthMenu': [[10, 15, 20, 25, 50, -1], [10, 15, 20, 25, 50, 'All']],
-         'order': [[2, 'asc']],
+         'order': [[3, 'asc']],
          'autoWidth': false
       });
 
