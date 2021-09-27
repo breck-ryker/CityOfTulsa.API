@@ -30,12 +30,42 @@ namespace CityOfTulsaUI.Classes {
             switch (model.QuerySettings.TFDDateFilterType) {
 
                case DateFilterType.OnDate:
-               case DateFilterType.AfterDate:
-               case DateFilterType.BeforeDate:
 
                   if (!(model.QuerySettings.MinDate.IsValidValue())) {
                      payload.msg = "Date is invalid. Please enter a valid date.";
                      if (string.IsNullOrWhiteSpace(model.QuerySettings.MinDateText)) {
+                        payload.msgmode = "no-user-entry";
+                     }
+                     return -1;
+                  }
+                  else if (!(model.QuerySettings.MaxDate.IsValidValue())) {
+                     payload.msg = "Date is invalid. Please enter a valid date.";
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MaxDateText)) {
+                        payload.msgmode = "no-user-entry";
+                     }
+                     return -1;
+                  }
+
+                  break;
+
+
+               case DateFilterType.AfterDate:
+
+                  if (!(model.QuerySettings.MinDate.IsValidValue())) {
+                     payload.msg = "Date is invalid. Please enter a valid date.";
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MinDateText)) {
+                        payload.msgmode = "no-user-entry";
+                     }
+                     return -1;
+                  }
+
+                  break;
+
+               case DateFilterType.BeforeDate:
+
+                  if (!(model.QuerySettings.MaxDate.IsValidValue())) {
+                     payload.msg = "Date is invalid. Please enter a valid date.";
+                     if (string.IsNullOrWhiteSpace(model.QuerySettings.MaxDateText)) {
                         payload.msgmode = "no-user-entry";
                      }
                      return -1;

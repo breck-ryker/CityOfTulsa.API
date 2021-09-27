@@ -108,7 +108,7 @@ namespace CityOfTulsaUI.Controllers {
                      }
 
                      if (model.QuerySettings.TFDDateFilterType == DateFilterType.OnDate) {
-                        model.QuerySettings.MaxDate = model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1);  // we just set mindate, maxdate should be set to the same.
+                        model.QuerySettings.MaxDate = model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1);  // we just set mindate, maxdate should be set to the same day's max.
                      }
 
                      payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
