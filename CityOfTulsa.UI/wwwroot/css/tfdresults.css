@@ -34,3 +34,7 @@ tr.dt-hasChild.shown + tr {
 table.tfd-fireevent-detail {
    background-color:white;
 }
+
+#search_results_wrapper .row:nth-of-type(2) .col-sm-12 {
+   min-height:360px;
+}

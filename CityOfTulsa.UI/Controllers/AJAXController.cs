@@ -25,6 +25,7 @@ namespace CityOfTulsaUI.Controllers {
       private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
       private readonly PathSettings _pathSettings;
+      private readonly string _apiKey = null;
 
       public AJAXController(
          ILogger<HomeController> logger,
@@ -36,6 +37,8 @@ namespace CityOfTulsaUI.Controllers {
          _cache = memoryCache;
          _config = config;
          _pathSettings = pathSettings.Value;
+
+         _apiKey = _config.GetValue<string>(CommonLib.CONST_AppSettings_ApiKeyName);
       }
 
       [HttpPost]
@@ -74,6 +77,11 @@ namespace CityOfTulsaUI.Controllers {
 
                      DateTime.TryParse(msg.data, out DateTime dt);
 
+                     if (!(dt.IsValidValue())) {
+                        payload.returncode = (-1).ToString();
+                        break;
+                     }
+
                      switch (model.QuerySettings.TFDDateFilterType) {
                         case DateFilterType.AfterDate:
                            model.QuerySettings.MaxDate = DateTime.MaxValue;  // clear the maxdate if they're assigning a mindate here.
@@ -101,7 +109,9 @@ namespace CityOfTulsaUI.Controllers {
                            model.QuerySettings.MaxDateText = msg.data;
 
                            if (dt.IsValidValue()) {
-                              dt = dt.AddDays(1).AddSeconds(-1);  // if they choose 9/26 as their end date, we're going to assume they mean ALL of that end date, not chop it at midnight.
+                              if (model.QuerySettings.TFDDateFilterType == DateFilterType.BetweenDates) {
+                                 dt = dt.AddDays(1).AddSeconds(-1);  // if they choose 9/26 as their end date, we're going to assume they mean ALL of that end date, not chop it at midnight.
+                              }
                               model.QuerySettings.MaxDate = dt;
                            }
 
@@ -109,7 +119,7 @@ namespace CityOfTulsaUI.Controllers {
                      }
 
                      if (model.QuerySettings.TFDDateFilterType == DateFilterType.OnDate) {
-                        model.QuerySettings.MaxDate = model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1);  // we just set mindate, maxdate should be set to the same day's max.
+                        model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.Date.AddDays(1).AddSeconds(-1) : DateTime.MinValue);  // we just set mindate, maxdate should be set to the same day's max.
                      }
 
                      payload.returncode = CommonLib.validateDateFilters(model, ref payload).ToString();
@@ -132,27 +142,27 @@ namespace CityOfTulsaUI.Controllers {
                      case DateFilterType.AfterDate:
                         switch (model.QuerySettings.TFDDateFilterType) {
                            case DateFilterType.BeforeDate:
-                              model.QuerySettings.MaxDate = model.QuerySettings.MinDate;
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.Date : DateTime.MinValue);
                               model.QuerySettings.MinDate = DateTime.MinValue;
                               break;
                            case DateFilterType.OnDate:
-                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.Date.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
                               break;
                         }
                         break;
                      case DateFilterType.BeforeDate:
                         switch (model.QuerySettings.TFDDateFilterType) {
                            case DateFilterType.AfterDate:
-                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
+                              model.QuerySettings.MinDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.Date : DateTime.MinValue);
                               model.QuerySettings.MaxDate = DateTime.MaxValue;
                               break;
                            case DateFilterType.BetweenDates:
-                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
+                              model.QuerySettings.MinDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.Date : DateTime.MinValue);
                               model.QuerySettings.MaxDate = DateTime.MinValue;
                               break;
                            case DateFilterType.OnDate:
-                              model.QuerySettings.MinDate = model.QuerySettings.MaxDate;
-                              model.QuerySettings.MaxDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              model.QuerySettings.MinDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.Date : DateTime.MinValue);
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MaxDate.IsValidValue() ? model.QuerySettings.MaxDate.Date.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
                               break;
                         }
                         break;
@@ -160,13 +170,12 @@ namespace CityOfTulsaUI.Controllers {
                         switch (model.QuerySettings.TFDDateFilterType) {
                            case DateFilterType.AfterDate:
                               model.QuerySettings.MaxDate = DateTime.MaxValue;
-                              model.QuerySettings.MinDate = model.QuerySettings.MinDate;
                               break;
                            case DateFilterType.BeforeDate:
                               model.QuerySettings.MinDate = DateTime.MinValue;
                               break;
                            case DateFilterType.OnDate:
-                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.Date.AddDays(1).AddSeconds(-1) : DateTime.MinValue);
                               break;
                         }
                         break;
@@ -176,8 +185,8 @@ namespace CityOfTulsaUI.Controllers {
                               model.QuerySettings.MaxDate = DateTime.MaxValue;
                               break;
                            case DateFilterType.BeforeDate:
+                              model.QuerySettings.MaxDate = (model.QuerySettings.MinDate.IsValidValue() ? model.QuerySettings.MinDate.Date : DateTime.MinValue);
                               model.QuerySettings.MinDate = DateTime.MinValue;
-                              model.QuerySettings.MaxDate = model.QuerySettings.MinDate;
                               break;
                            case DateFilterType.BetweenDates:
                               model.QuerySettings.MaxDate = DateTime.MinValue;
@@ -357,13 +366,16 @@ namespace CityOfTulsaUI.Controllers {
 
                   url = QueryHelpers.AddQueryString(_pathSettings.TFDEventCountURL, dictQueryString);
 
+                  _httpClient.DefaultRequestHeaders.Clear();
+                  _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+
                   var eventTask = Task.Run(() => _httpClient.GetAsync(url));
                   eventTask.Wait();
-                  var result = eventTask.Result;
+                  var searchResult = eventTask.Result;
 
-                  if (result.IsSuccessStatusCode) {
+                  if (searchResult.IsSuccessStatusCode) {
 
-                     var readTask = result.Content.ReadAsStringAsync();
+                     var readTask = searchResult.Content.ReadAsStringAsync();
                      readTask.Wait();
 
                      model.TFDEventsCountResult = JsonConvert.DeserializeObject<int>(readTask.Result);
@@ -371,6 +383,7 @@ namespace CityOfTulsaUI.Controllers {
                   }
                   else {
                      ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
+                     payload.msg = ((int)searchResult.StatusCode).ToString() + ": " + searchResult.ReasonPhrase;
                      payload.returncode = (-1).ToString();
                   }
 
@@ -385,6 +398,9 @@ namespace CityOfTulsaUI.Controllers {
 
                   url = QueryHelpers.AddQueryString(_pathSettings.TFDVehiclesURL, dictQueryString);
 
+                  _httpClient.DefaultRequestHeaders.Clear();
+                  _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+
                   var vehicleTask = Task.Run(() => _httpClient.GetAsync(url));
                   vehicleTask.Wait();
                   var vehicleResult = vehicleTask.Result;
@@ -395,11 +411,13 @@ namespace CityOfTulsaUI.Controllers {
                      readTask.Wait();
 
                      payload.markup = readTask.Result;
-
+                     payload.returncode = (0).ToString();
                      //IEnumerable<FireVehicleHelper> vehicles = JsonConvert.DeserializeObject<IEnumerable<FireVehicleHelper>>(readTask.Result);
                   }
                   else {
                      ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
+                     payload.msg = ((int)vehicleResult.StatusCode).ToString() + ": " + vehicleResult.ReasonPhrase;
+                     payload.returncode = (-1).ToString();
                   }
 
                   break;

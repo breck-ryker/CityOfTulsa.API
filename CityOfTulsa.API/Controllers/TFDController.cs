@@ -1,4 +1,5 @@
-﻿using CityOfTulsaData;
+﻿using CityOfTulsaAPI.Attributes;
+using CityOfTulsaData;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -70,6 +71,7 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("events")]
+      [ApiKeyRequired]
       public IEnumerable<FireEventHelper> GetEvents(
          string? mindate = null,
          string? maxdate = null,
@@ -110,6 +112,7 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("eventcount")]
+      [ApiKeyRequired]
       public int GetEventCount(
          string? mindate = null,
          string? maxdate = null,
@@ -252,6 +255,7 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("vehicles")]
+      [ApiKeyRequired]
       public IEnumerable<FireVehicleHelper> GetVehicles(
          string? mindate = null,
          string? maxdate = null,

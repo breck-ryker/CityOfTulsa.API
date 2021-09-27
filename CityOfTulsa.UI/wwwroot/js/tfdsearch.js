@@ -11,6 +11,31 @@ $(document).ready(function () {
    SetCommonHandlers();
 
    CallAJAX('tfd.do-init-validation', null, null, null, null, true);
+
+   //alertify.defaults = {
+   //   // dialogs defaults
+   //   autoReset: true,
+   //   basic: false,
+   //   closable: true,
+   //   closableByDimmer: true,
+   //   invokeOnCloseOff: false,
+   //   frameless: false,
+   //   defaultFocusOff: false,
+   //   maintainFocus: true, // <== global default not per instance, applies to all dialogs
+   //   maximizable: true,
+   //   modal: true,
+   //   movable: true,
+   //   moveBounded: false,
+   //   overflow: true,
+   //   padding: true,
+   //   pinnable: true,
+   //   pinned: true,
+   //   preventBodyShift: false, // <== global default not per instance, applies to all dialogs
+   //   resizable: true,
+   //   startMaximized: false,
+   //   transition: 'zoom',
+   //   transitionOff: false
+   //}
 });
 
 function ProcessAJAXCallbackResults_TFDSearch(responseData) {
@@ -46,6 +71,11 @@ function ProcessAJAXCallbackResults_TFDSearch(responseData) {
          else {
             $('.cot-results-btn').addClass('cot-hidden');
             $('.cot-noresults-btn').removeClass('cot-hidden');
+         }
+
+         if (responseData.parameters.msg) {
+            alertify.dialog('alert').set({ transition: 'zoom' });
+            alertify.alert('Run Search', responseData.parameters.msg);
          }
 
          break;

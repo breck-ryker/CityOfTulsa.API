@@ -64,7 +64,14 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
 
       case 'tfd-results.get-event-vehicles':
 
-         if (responseData.parameters.markup && responseData.parameters.ids && responseData.parameters.ids.length == 1) {
+         if (responseData.parameters.msg) {
+            alertify.dialog('alert').set({ transition: 'zoom' });
+            alertify.alert('Run Search', responseData.parameters.msg);
+         }
+
+         var returnval = responseData.parameters.returncode;
+
+         if (returnval >= 0 && responseData.parameters.markup && responseData.parameters.ids && responseData.parameters.ids.length == 1) {
 
             var vehicles = null;
 

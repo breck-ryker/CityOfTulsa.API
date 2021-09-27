@@ -103,7 +103,6 @@ namespace CityOfTulsaUI.Models {
 
       public QuerySettings DeepCopy() {
          QuerySettings clone = (QuerySettings)this.MemberwiseClone();
-         //QuerySettings clone = new();
          clone.TFDDivsions = this.TFDDivsions.Clone();
          clone.TFDProblems = this.TFDProblems.Clone();
          clone.TFDStations = this.TFDStations.Clone();
@@ -115,13 +114,11 @@ namespace CityOfTulsaUI.Models {
          get {
             switch (this.TFDDateFilterType) {
                case DateFilterType.AfterDate:
+               case DateFilterType.BetweenDates:
+               case DateFilterType.OnDate:
                   return this.MinDate;
                case DateFilterType.BeforeDate:
                   return this.MaxDate;
-               case DateFilterType.BetweenDates:
-                  return this.MinDate;
-               case DateFilterType.OnDate:
-                  return this.MinDate;
                default:
                   return DateTime.MinValue;
             }
