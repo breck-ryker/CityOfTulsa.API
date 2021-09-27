@@ -885,6 +885,200 @@ namespace CityOfTulsaData {
       }
    }
 
+   public static class DecimalExtensions {
+
+      public static int ToValidInteger(this decimal val) {
+
+         if (val == decimal.MinValue || val == decimal.MaxValue) {
+            return 0;
+         }
+         else {
+            return Convert.ToInt32(Math.Round(val, 0, MidpointRounding.AwayFromZero));
+         }
+      }
+
+      public static decimal RoundTo(this decimal val, int decimalPlaces) {
+
+         return Math.Round(val, decimalPlaces, MidpointRounding.AwayFromZero);
+      }
+
+      public static bool IsValidValue(this decimal val) {
+
+         if (val == decimal.MinValue || val == decimal.MaxValue) {
+            return false;
+         }
+         else {
+            return true;
+         }
+      }
+
+      public static bool IsValidNonNegativeValue(this decimal val) {
+
+         if (val.IsValidValue() && val >= 0) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+
+      public static bool IsValidPositiveValue(this decimal val) {
+
+         if (val.IsValidValue() && val > 0) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+
+      public static bool IsValidNonZeroValue(this decimal val) {
+
+         if (val.IsValidValue() && val != 0) {
+            return true;
+         }
+         else {
+            return false;
+         }
+      }
+
+      public static decimal ToValidValue(this decimal val) {
+
+         return val.ToValidValue(0);
+      }
+
+      public static decimal ToValidValue(this decimal val, decimal defaultValue) {
+
+         if (val == decimal.MinValue || val == decimal.MaxValue) {
+            return defaultValue;
+         }
+         else {
+            return val;
+         }
+      }
+
+      public static decimal ToValidNonNegativeValue(this decimal val) {
+
+         return val.ToValidNonNegativeValue(0);
+      }
+
+      public static decimal ToValidNonNegativeValue(this decimal val, decimal defaultValue) {
+
+         if (val < 0 || val == decimal.MaxValue) {
+            return defaultValue;
+         }
+         else {
+            return val;
+         }
+      }
+
+      public static int ToValidNonNegativeInteger(this decimal val) {
+
+         if (val < 0) {
+            return 0;
+         }
+         else {
+            return Convert.ToInt32(Math.Round(val, 0, MidpointRounding.AwayFromZero));
+         }
+      }
+
+      public static string ToValidValueText(this decimal val) {
+
+         if (val == Decimal.MinValue || val == Decimal.MaxValue) {
+            return string.Empty;
+         }
+         else {
+            return val.ToString();
+         }
+      }
+
+      public static string ToValidNonNegativeValueText(this decimal val) {
+
+         if (val < 0) {
+            return string.Empty;
+         }
+         else {
+            return val.ToString();
+         }
+      }
+
+      public static string ToValidNonNegativeIntegerText(this decimal val) {
+
+         int nValue = val.ToValidNonNegativeInteger();
+
+         if (nValue < 0) {
+            return string.Empty;
+         }
+         else {
+            return nValue.ToString();
+         }
+      }
+
+      public static string ToThousandsSeparatorFormat(
+         this decimal val
+      ) {
+         return String.Format("{0:N}", val);
+      }
+
+      public static string ToDecimalFormat(
+         this decimal val,
+         int decimalPlaces
+      ) {
+         return val.ToString("0." + new string('0', decimalPlaces));
+      }
+
+      public static string ToDecimalFormat(
+         this decimal val,
+         int decimalPlaces,
+         bool includeThousandsSeparator
+      ) {
+         if (includeThousandsSeparator) {
+            return String.Format("{0:N" + decimalPlaces.ToString() + "}", val);
+         }
+         else {
+            return val.ToString("0." + new string('0', decimalPlaces));
+         }
+      }
+
+      public static string RoundAndFormat(
+         this System.Decimal val,
+         int decimalPlaces,
+         bool includeThousandsSeparator
+      ) {
+
+         if (includeThousandsSeparator) {
+            return String.Format("{0:N" + decimalPlaces.ToString() + "}", Math.Round(val, decimalPlaces, MidpointRounding.AwayFromZero));
+         }
+         else {
+            return Math.Round(val, decimalPlaces, MidpointRounding.AwayFromZero).ToString("0." + new string('0', decimalPlaces));
+         }
+      }
+
+      public static string RoundAndFormat(
+         this System.Decimal val,
+         int decimalPlaces,
+         bool includeThousandsSeparator,
+         bool trimInsignificantTrailingZeros
+      ) {
+
+         string sReturnValue = null;
+
+         if (includeThousandsSeparator) {
+            sReturnValue = String.Format("{0:N" + decimalPlaces.ToString() + "}", Math.Round(val, decimalPlaces, MidpointRounding.AwayFromZero));
+         }
+         else {
+            sReturnValue = Math.Round(val, decimalPlaces, MidpointRounding.AwayFromZero).ToString("0." + new string('0', decimalPlaces));
+         }
+
+         if (trimInsignificantTrailingZeros) {
+
+            sReturnValue = sReturnValue.TrimInsignificantTrailingZeros();
+         }
+
+         return sReturnValue;
+      }
+   }
+
    public static class DateTimeExtensions {
 
       public static DateTime RoundUp(this System.DateTime dt, System.TimeSpan d) {

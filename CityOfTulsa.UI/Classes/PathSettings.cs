@@ -17,6 +17,7 @@ namespace CityOfTulsaUI.Classes {
       public string TFDDivisionsURL { get; set; } = null;
       public string TFDStationsURL { get; set; } = null;
       public string TFDVehiclesURL { get; set; } = null;
+      public string TFDVehicleIDsURL { get; set; } = null;
       public string TFDEventsURL { get; set; } = null;
       public string TFDEventCountURL { get; set; } = null;
 

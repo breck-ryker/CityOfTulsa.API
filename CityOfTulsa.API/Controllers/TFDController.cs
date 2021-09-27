@@ -252,9 +252,11 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("vehicles")]
-      public IEnumerable<string> GetVehicles(
+      public IEnumerable<FireVehicleHelper> GetVehicles(
          string? mindate = null,
          string? maxdate = null,
+         string? fireeventids = null,
+         string? incidentids = null,
          string? problems = null,
          string? divisions = null,
          string? stations = null
@@ -262,6 +264,8 @@ namespace CityOfTulsaAPI.Controllers {
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listFireEventIDs = (string.IsNullOrWhiteSpace(fireeventids) ? new List<string>() : fireeventids.Split(',').ToList());
+         List<string> listIncidentIDs = (string.IsNullOrWhiteSpace(incidentids) ? new List<string>() : incidentids.Split(',').ToList());
          List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
          List<string> listStations = (string.IsNullOrWhiteSpace(stations) ? new List<string>() : stations.Split(',').ToList());
          List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
@@ -271,6 +275,53 @@ namespace CityOfTulsaAPI.Controllers {
                (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
                &&
                (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listFireEventIDs.Count == 0 || listFireEventIDs.Contains(e.FireEventID.ToString()))
+               &&
+               (listIncidentIDs.Count == 0 || listIncidentIDs.Contains(e.IncidentNumber))
+               &&
+               (listProblems.Count == 0 || listProblems.Contains(e.Problem))
+            )
+            .Include(e => e.FireVehicles)
+            .SelectMany(e => e.FireVehicles)
+            .Where(v =>
+               (listDivisions.Count == 0 || listDivisions.Contains(v.Division))
+               &&
+               (listStations.Count == 0 || listStations.Contains(v.Station))
+            )
+            .Select(v => new FireVehicleHelper(v))
+            .Take(1000)
+            ;
+      }
+
+      [HttpGet("vehicleids")]
+      public IEnumerable<string> GetVehicleIDs(
+         string? mindate = null,
+         string? maxdate = null,
+         string? fireeventids = null,
+         string? incidentids = null,
+         string? problems = null,
+         string? divisions = null,
+         string? stations = null
+      ) {
+
+         DateTime.TryParse(mindate, out DateTime dtMin);
+         DateTime.TryParse(maxdate, out DateTime dtMax);
+         List<string> listFireEventIDs = (string.IsNullOrWhiteSpace(fireeventids) ? new List<string>() : fireeventids.Split(',').ToList());
+         List<string> listIncidentIDs = (string.IsNullOrWhiteSpace(incidentids) ? new List<string>() : incidentids.Split(',').ToList());
+         List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
+         List<string> listStations = (string.IsNullOrWhiteSpace(stations) ? new List<string>() : stations.Split(',').ToList());
+         List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
+
+         return _dbcontext.FireEvents
+            .Where(e =>
+               (!(dtMin.IsValidValue()) || e.ResponseDate >= dtMin)
+               &&
+               (!(dtMax.IsValidValue()) || e.ResponseDate <= dtMax)
+               &&
+               (listFireEventIDs.Count == 0 || listFireEventIDs.Contains(e.FireEventID.ToString()))
+               &&
+               (listIncidentIDs.Count == 0 || listIncidentIDs.Contains(e.IncidentNumber))
                &&
                (listProblems.Count == 0 || listProblems.Contains(e.Problem))
             )

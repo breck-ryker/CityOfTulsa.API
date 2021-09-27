@@ -8,3 +8,21 @@
 table.dataTable td {
    font-size: 0.8rem;
 }
+
+table.dataTable th {
+   font-size: 0.9rem;
+}
+
+td.details-control {
+   background: url('/images/details_open.png') no-repeat center center;
+   cursor: pointer;
+}
+
+tr.shown td.details-control {
+   background: url('/images/details_close.png') no-repeat center center;
+}
+
+td.map-launcher {
+   cursor:pointer;
+   text-decoration:underline;
+}

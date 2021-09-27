@@ -12,8 +12,6 @@
    }
 }
 
-<h5 class="text-muted">@ViewData["Title"]</h5>
-
 @section Styles
 {
    <link rel="stylesheet" type="text/css" href="@Url.Content("/lib/datatables/dataTables.min.css")" />
@@ -28,6 +26,16 @@
    <script src="@Url.Content("/js/tfdresults.js")"></script>
 }
 
+<div class="row">
+
+   <div class="col align-self-center">
+      <h5 class="text-muted">@ViewData["Title"]</h5>
+   </div>
+   <div class="col align-self-center">
+      <a href="/Home/TFDSearch" data-role="button" class="btn btn-sm btn-secondary">< Back to TFD Search</a>
+   </div>
+</div>
+
 <div class="row mt-4">
 
    <div id="results_container" class="col-12" style="display:none;">
@@ -36,19 +44,25 @@
 
          <thead>
             <tr>
+               <th>Vehicle<br/>Info</th>
                <th>Incident #</th>
                <th>Problem</th>
                <th>Response Date</th>
                <th>Address</th>
+               <th>Latitude</th>
+               <th>Longitude</th>
             </tr>
          </thead>
          <tbody>
             @foreach (FireEventHelper fe in listEvents) {
                <tr>
+                  <td class="details-control" data-incidentid="@((fe.IncidentNumber ?? ""))"></td>
                   <td>@((fe.IncidentNumber ?? ""))</td>
                   <td>@((fe.Problem ?? ""))</td>
                   <td>@((fe.ResponseDate.IsValidValue() ? fe.ResponseDate.ToString("MM/dd/yyyy HH:mm") : ""))</td>
-                  <td>@((fe.Address ?? ""))</td>
+                  <td class="map-launcher">@((fe.Address ?? ""))</td>
+                  <td class="map-launcher">@((fe.Latitude.IsValidValue() ? fe.Latitude.ToString() : ""))</td>
+                  <td class="map-launcher">@((fe.Longitude.IsValidValue() ? fe.Longitude.ToString() : ""))</td>
                </tr>
             }
          </tbody>

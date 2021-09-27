@@ -146,9 +146,9 @@ namespace CityOfTulsaUI.Controllers {
             _cache.Set(CacheKeys.COT_API_TFD_Stations.ToString(), stations, cacheEntryOptions);
          }
 
-         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Vehicles.ToString(), out vehicles))) {
+         if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_VehicleIDs.ToString(), out vehicles))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDVehiclesURL));
+            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDVehicleIDsURL));
             task.Wait();
             var result = task.Result;
 
@@ -168,7 +168,7 @@ namespace CityOfTulsaUI.Controllers {
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(60));
 
             // Save data in cache.
-            _cache.Set(CacheKeys.COT_API_TFD_Vehicles.ToString(), vehicles, cacheEntryOptions);
+            _cache.Set(CacheKeys.COT_API_TFD_VehicleIDs.ToString(), vehicles, cacheEntryOptions);
          }
 
          this.ViewBag.Problems = problems;
@@ -203,8 +203,8 @@ namespace CityOfTulsaUI.Controllers {
 
          var qryString = new Dictionary<string, string>()
          {
-            { "mindate", minDate.ToString("MM/dd/yyyy") },
-            { "maxdate", maxDate.ToString("MM/dd/yyyy") },
+            { "mindate", minDate.ToString("MM/dd/yyyy HH:mm") },
+            { "maxdate", maxDate.ToString("MM/dd/yyyy HH:mm") },
             { "problems", problems },
             { "divisions", divisions },
             { "stations", stations },
