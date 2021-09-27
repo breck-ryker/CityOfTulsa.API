@@ -2,3 +2,11 @@
 .navbar-nav li.nav-item[data-pagekey="cot-project"] {
    border-bottom: 4px solid orange;
 }
+
+#about_list > li {
+   margin:12px 0px 12px 0px;
+}
+
+#tech_list > li {
+   margin: 6px 0px 6px 0px;
+}
