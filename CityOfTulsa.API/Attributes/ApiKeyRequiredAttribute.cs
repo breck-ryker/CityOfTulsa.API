@@ -11,7 +11,7 @@ namespace CityOfTulsaAPI.Attributes {
    [AttributeUsage(validOn: AttributeTargets.Class | AttributeTargets.Method)]
    public class ApiKeyRequiredAttribute : Attribute, IAsyncActionFilter {
 
-      private const string CONST_AppSettings_ApiKeyName = "ApiKey";
+      private const string CONST_AppSettings_ApiKeyName = "APIKey";
       private const string CONST_Headers_ApiKeyName = "X-API-KEY";
 
       public async Task OnActionExecutionAsync(

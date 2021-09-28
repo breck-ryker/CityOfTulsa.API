@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Controllers {
@@ -57,6 +58,10 @@ namespace CityOfTulsaUI.Controllers {
 
          model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
          model.PrevQuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.PrevQuerySettings");
+
+         if (model.PathSettings.APIAuthMethod == "jwt") {
+            model.VerifyAPIToken();
+         }
 
          try {
 
@@ -366,8 +371,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   url = QueryHelpers.AddQueryString(_pathSettings.TFDEventCountURL, dictQueryString);
 
-                  _httpClient.DefaultRequestHeaders.Clear();
-                  _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                  if (model.PathSettings.APIAuthMethod == "api-key") {
+                     _httpClient.DefaultRequestHeaders.Clear();
+                     _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                  }
+                  else if (model.PathSettings.APIAuthMethod == "jwt") {
+                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
+                  }
 
                   var eventTask = Task.Run(() => _httpClient.GetAsync(url));
                   eventTask.Wait();
@@ -398,8 +408,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   url = QueryHelpers.AddQueryString(_pathSettings.TFDVehiclesURL, dictQueryString);
 
-                  _httpClient.DefaultRequestHeaders.Clear();
-                  _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                  if (model.PathSettings.APIAuthMethod == "api-key") {
+                     _httpClient.DefaultRequestHeaders.Clear();
+                     _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                  }
+                  else if (model.PathSettings.APIAuthMethod == "jwt") {
+                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
+                  }
 
                   var vehicleTask = Task.Run(() => _httpClient.GetAsync(url));
                   vehicleTask.Wait();

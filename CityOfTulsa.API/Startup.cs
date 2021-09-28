@@ -1,4 +1,5 @@
 using CityOfTulsaData;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,10 +7,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CityOfTulsa.API {
@@ -25,6 +28,8 @@ namespace CityOfTulsa.API {
       // This method gets called by the runtime. Use this method to add services to the container.
       // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
       public void ConfigureServices(IServiceCollection services) {
+
+         string jwtKey = this.Configuration["JWT:Key"];
 
          //https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58084628#58084628
          services.AddControllers().AddNewtonsoftJson(
@@ -48,6 +53,23 @@ namespace CityOfTulsa.API {
          });
 
          services.AddControllers();
+
+         services.AddAuthentication(x =>
+         {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+         })
+         .AddJwtBearer(x =>
+         {
+            x.RequireHttpsMetadata = false;
+            x.SaveToken = true;
+            x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters {
+               ValidateIssuerSigningKey = true,
+               ValidateIssuer = false,
+               ValidateAudience = false,
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey))
+            };
+         });
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +87,8 @@ namespace CityOfTulsa.API {
          app.UseCors("AllowAll");
 
          app.UseRouting();
+
+         app.UseAuthentication();
 
          app.UseAuthorization();
 

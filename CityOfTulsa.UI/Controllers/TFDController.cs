@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using static CityOfTulsaUI.Classes.CommonLib;
 
@@ -195,8 +196,14 @@ namespace CityOfTulsaUI.Controllers {
 
          string url = QueryHelpers.AddQueryString(_pathSettings.TFDEventsURL, qryString);
 
-         _httpClient.DefaultRequestHeaders.Clear();
-         _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+         if (model.PathSettings.APIAuthMethod == "api-key") {
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+         }
+         else if (model.PathSettings.APIAuthMethod == "jwt") {
+            model.VerifyAPIToken();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
+         }
 
          var task = Task.Run(() => _httpClient.GetAsync(url));
          task.Wait();

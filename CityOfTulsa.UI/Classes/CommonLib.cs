@@ -19,7 +19,7 @@ namespace CityOfTulsaUI.Classes {
          COT_API_TFD_VehicleIDs = 4
       }
 
-      public const string CONST_AppSettings_ApiKeyName = "ApiKey";
+      public const string CONST_AppSettings_ApiKeyName = "APIKey";
       public const string CONST_Headers_ApiKeyName = "X-API-KEY";
 
       public static int validateDateFilters(UserModel model, ref AJAXPayload payload) {

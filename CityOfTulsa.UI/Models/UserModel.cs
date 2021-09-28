@@ -1,8 +1,11 @@
 ﻿using CityOfTulsaData;
 using CityOfTulsaUI.Classes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Models {
@@ -18,6 +21,35 @@ namespace CityOfTulsaUI.Models {
    public class UserModel {
 
       private QuerySettings _qrySettings = null;
+
+      public string APIToken { get; set; } = null;
+
+      public bool VerifyAPIToken() {
+
+         if (!(string.IsNullOrWhiteSpace(this.APIToken))) {
+            return true;
+         }
+
+         UserAuthInfo userInfo = new UserAuthInfo();
+         userInfo.UserName = "generic-client";
+         userInfo.Password = "Ciudad de Tulsey 4most o!l-town";
+
+         HttpClient httpClient = new HttpClient();
+         //httpClient.BaseAddress = new Uri(this.PathSettings.APILogInURL);
+         var contentType = new MediaTypeWithQualityHeaderValue("application/json");
+         httpClient.DefaultRequestHeaders.Accept.Add(contentType);
+
+         string stringData = JsonConvert.SerializeObject(userInfo);
+         var contentData = new StringContent(stringData, System.Text.Encoding.UTF8, "application/json");
+
+         HttpResponseMessage response = httpClient.PostAsync(this.PathSettings.APILogInURL, contentData).Result;
+         string stringJWT = response.Content.ReadAsStringAsync().Result;
+         JWT jwt = JsonConvert.DeserializeObject<JWT>(stringJWT);
+
+         this.APIToken = jwt.Token;
+
+         return true;
+      }
 
       public PathSettings PathSettings { get; set; } = null;
 

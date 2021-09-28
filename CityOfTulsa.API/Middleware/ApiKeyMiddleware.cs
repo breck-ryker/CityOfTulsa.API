@@ -8,8 +8,8 @@ namespace CityOfTulsaAPI.Middleware {
    public class ApiKeyMiddleware {
 
       private readonly RequestDelegate _next;
-      private const string CONST_AppSettings_ApiKeyName = "ApiKey";
-      private const string CONST_Headers_ApiKeyName = "ApiKey";
+      private const string CONST_AppSettings_ApiKeyName = "APIKey";
+      private const string CONST_Headers_ApiKeyName = "APIKey";
 
       public ApiKeyMiddleware(RequestDelegate next) {
          _next = next;

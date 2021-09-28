@@ -1,5 +1,6 @@
 ﻿using CityOfTulsaAPI.Attributes;
 using CityOfTulsaData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -112,7 +113,8 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("eventcount")]
-      [ApiKeyRequired]
+      //[ApiKeyRequired]
+      [Authorize]
       public int GetEventCount(
          string? mindate = null,
          string? maxdate = null,

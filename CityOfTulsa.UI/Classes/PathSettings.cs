@@ -11,7 +11,11 @@ namespace CityOfTulsaUI.Classes {
          //todo
       }
 
-      public string WebAPISwaggerURL { get; set; } = null;
+      public string APISwaggerURL { get; set; } = null;
+      public string APILogInURL { get; set; } = null;
+      public string APILogInPassword { get; set; } = null;
+      public string APIAuthMethod { get; set; } = null;
+      public string APIKey { get; set; } = null;
 
       public string TFDProblemsURL { get; set; } = null;
       public string TFDDivisionsURL { get; set; } = null;
