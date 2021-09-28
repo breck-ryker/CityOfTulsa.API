@@ -1,3 +1,4 @@
+using CityOfTulsaAPI.Classes;
 using CityOfTulsaData;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -29,7 +30,7 @@ namespace CityOfTulsa.API {
       // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
       public void ConfigureServices(IServiceCollection services) {
 
-         string jwtKey = this.Configuration["JWT:Key"];
+         string jwtKey = this.Configuration["AppSettings:JWT:Key"];
 
          //https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58084628#58084628
          services.AddControllers().AddNewtonsoftJson(
@@ -54,6 +55,9 @@ namespace CityOfTulsa.API {
 
          services.AddControllers();
 
+         AppSettings appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+         services.AddSingleton(appSettings);
+
          services.AddAuthentication(x =>
          {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -63,7 +67,7 @@ namespace CityOfTulsa.API {
          {
             x.RequireHttpsMetadata = false;
             x.SaveToken = true;
-            x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters {
+            x.TokenValidationParameters = new TokenValidationParameters {
                ValidateIssuerSigningKey = true,
                ValidateIssuer = false,
                ValidateAudience = false,

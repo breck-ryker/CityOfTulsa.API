@@ -1,4 +1,5 @@
 ﻿
+using CityOfTulsaAPI.Classes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
@@ -11,15 +12,27 @@ namespace CityOfTulsaAPI.Attributes {
    [AttributeUsage(validOn: AttributeTargets.Class | AttributeTargets.Method)]
    public class ApiKeyRequiredAttribute : Attribute, IAsyncActionFilter {
 
-      private const string CONST_AppSettings_ApiKeyName = "APIKey";
-      private const string CONST_Headers_ApiKeyName = "X-API-KEY";
+      //private const string CONST_AppSettings_ApiKeyName = "APIKey";
+      //private const string CONST_Headers_ApiKeyName = "X-API-KEY";
+
+      private AppSettings? _appSettings = null;
 
       public async Task OnActionExecutionAsync(
          ActionExecutingContext context, 
          ActionExecutionDelegate next
       ) {
 
-         if (!(context.HttpContext.Request.Headers.TryGetValue(CONST_Headers_ApiKeyName, out var headerApiKey))) {
+         Microsoft.Extensions.Primitives.StringValues headerApiKey = new Microsoft.Extensions.Primitives.StringValues();
+         IServiceProvider services = context.HttpContext.RequestServices;
+         _appSettings = services.GetService<AppSettings>();
+
+         if (
+            _appSettings != null 
+            && 
+            !(string.IsNullOrWhiteSpace(_appSettings.HeaderAPIKeyName)) 
+            && 
+            !(context.HttpContext.Request.Headers.TryGetValue(_appSettings.HeaderAPIKeyName, out headerApiKey))
+         ) {
 
             context.Result = new ContentResult() {
                StatusCode = 401,
@@ -29,11 +42,11 @@ namespace CityOfTulsaAPI.Attributes {
             return;
          }
 
-         var appSettings = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
+         //var appSettings = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 
-         var apiKey = appSettings.GetValue<string>(CONST_AppSettings_ApiKeyName);
+         //var apiKey = appSettings.GetValue<string>(CONST_AppSettings_ApiKeyName);
 
-         if (!(apiKey.Equals(headerApiKey))) {
+         if (_appSettings != null && !(_appSettings.APIKey.Equals(headerApiKey))) {
 
             context.Result = new ContentResult() {
                StatusCode = 401,

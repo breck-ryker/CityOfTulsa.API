@@ -73,6 +73,7 @@ namespace CityOfTulsaAPI.Controllers {
 
       [HttpGet("events")]
       [ApiKeyRequired]
+      //[Authorize]
       public IEnumerable<FireEventHelper> GetEvents(
          string? mindate = null,
          string? maxdate = null,
@@ -113,8 +114,8 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("eventcount")]
-      //[ApiKeyRequired]
-      [Authorize]
+      [ApiKeyRequired]
+      //[Authorize]
       public int GetEventCount(
          string? mindate = null,
          string? maxdate = null,
@@ -258,6 +259,7 @@ namespace CityOfTulsaAPI.Controllers {
 
       [HttpGet("vehicles")]
       [ApiKeyRequired]
+      //[Authorize]
       public IEnumerable<FireVehicleHelper> GetVehicles(
          string? mindate = null,
          string? maxdate = null,
