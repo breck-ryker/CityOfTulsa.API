@@ -9,7 +9,7 @@ $(document).ready(function () {
 
    _dt = $('#search_results')
       .on('init.dt', function () {
-         $('#results_container').fadeIn(1000);
+         $('#results_container').fadeIn(500);
       })
       .DataTable({
          'paging': true,

@@ -24,6 +24,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet]
+      //[ApiKeyRequired]
+      //[Authorize]
+      [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
       public IEnumerable<FireEventHelper> Get() {
          
          // just return the most recent n records
@@ -38,6 +42,10 @@ namespace CityOfTulsaAPI.Controllers {
 
       // GET <TFDController>/5 -or- /TFD2021000053922
       [HttpGet("{id}")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
       // [Route("{id:alpha:minlength(1):maxlength(16)}")] // swagger hates this
       public FireEventHelper? Get(string id) {
 
@@ -50,6 +58,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("dates")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
       public IEnumerable<FireEventHelper> Get(
          string? mindate = null, 
          string? maxdate = null
@@ -75,6 +87,7 @@ namespace CityOfTulsaAPI.Controllers {
       //[ApiKeyRequired]
       //[Authorize]
       [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Client)]  //VaryByQueryKeys = new[] { "*" }
       public IEnumerable<FireEventHelper> GetEvents(
          string? mindate = null,
          string? maxdate = null,
@@ -118,6 +131,7 @@ namespace CityOfTulsaAPI.Controllers {
       //[ApiKeyRequired]
       //[Authorize]
       [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 120, Location = ResponseCacheLocation.Client)]
       public int GetEventCount(
          string? mindate = null,
          string? maxdate = null,
@@ -158,6 +172,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("problems")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      //[JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]  //VaryByQueryKeys = new[] { "*" }
       public IEnumerable<string> GetProblems(
          string? mindate = null, 
          string? maxdate = null,
@@ -198,6 +216,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("divisions")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      //[JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]  // VaryByQueryKeys = new[] { "*" }
       public IEnumerable<string> GetDivisions(
          string? mindate = null,
          string? maxdate = null,
@@ -227,6 +249,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("stations")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      //[JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]  // VaryByQueryKeys = new[] { "*" }
       public IEnumerable<string> GetStations(
          string? mindate = null,
          string? maxdate = null,
@@ -262,6 +288,7 @@ namespace CityOfTulsaAPI.Controllers {
       //[ApiKeyRequired]
       //[Authorize]
       [JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]  // VaryByQueryKeys = new[] { "*" }
       public IEnumerable<FireVehicleHelper> GetVehicles(
          string? mindate = null,
          string? maxdate = null,
@@ -305,6 +332,10 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("vehicleids")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      //[JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Any)]  // VaryByQueryKeys = new[] { "*" }
       public IEnumerable<string> GetVehicleIDs(
          string? mindate = null,
          string? maxdate = null,

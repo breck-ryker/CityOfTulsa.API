@@ -57,6 +57,7 @@ header {
 .filter-date {
    min-width: 120px;
    max-width: 120px;
+   font-weight:bold;
 }
 
 .btn-group label {

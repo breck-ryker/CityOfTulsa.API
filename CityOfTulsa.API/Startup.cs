@@ -94,6 +94,8 @@ namespace CityOfTulsa.API {
 
          app.UseRouting();
 
+         app.UseResponseCaching();
+
          app.UseAuthentication();
 
          app.UseAuthorization();

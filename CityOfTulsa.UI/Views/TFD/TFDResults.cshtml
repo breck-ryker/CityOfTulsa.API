@@ -5,6 +5,7 @@
 @{
    ViewData["Title"] = "TFD Dispatch Data - Search Results";
    string errorMsg = ViewBag.ErrorMessage;
+   string qryDesc = ViewBag.QueryDescription;
    List<CityOfTulsaData.FireEventHelper> listEvents = (List<CityOfTulsaData.FireEventHelper>)ViewBag.FireEvents;
 
    if (listEvents == null || listEvents.Count == 0) {
@@ -40,6 +41,14 @@
    </div>
 </div>
 
+@if (!(string.IsNullOrWhiteSpace(qryDesc))) {
+   <div class="row mt-2" id="query_desc">
+      <div class="col">
+            <p class="text-muted">Query Parameters: @qryDesc</p>
+      </div>
+   </div>
+}
+
 <div class="row mt-4">
 
    <div id="results_container" class="col-12" style="display:none;">
@@ -48,7 +57,7 @@
 
          <thead>
             <tr>
-               <th>Vehicle<br/>Info</th>
+               <th>Vehicle<br />Info</th>
                <th>Incident #</th>
                <th>Problem</th>
                <th>Response Date</th>

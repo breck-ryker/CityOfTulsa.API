@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Models {
@@ -158,6 +159,23 @@ namespace CityOfTulsaUI.Models {
                default:
                   return DateTime.MinValue;
             }
+         }
+      }
+
+      public string Description {
+         get {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(
+               (this.UseTFDDateFilter ? this.TFDDateFilterType.ToString().ToSpacedOutTextByCaps() + ": " + this.DisplayDate1.ToString("MM/dd/yyyy") + " " : "")
+               + (this.UseTFDDateFilter && this.TFDDateFilterType == DateFilterType.BetweenDates ? " and " + this.DisplayDate2.ToString("MM/dd/yyyy") : "")
+               + (this.UseTFDProblemFilter ? " Problems: { " + string.Join(", ", this.TFDProblems) + " }" : "")
+               + (this.UseTFDDivisionFilter ? " Divisions: { " + string.Join(", ", this.TFDDivsions) + " }" : "")
+               + (this.UseTFDStationFilter ? " Stations: { " + string.Join(", ", this.TFDStations) + " }" : "")
+               + (this.UseTFDVehicleFilter ? " Vehicles: { " + string.Join(", ", this.TFDVehicles) + " }" : "")
+               );
+
+            return sb.ToString().Trim();
          }
       }
    }
