@@ -162,21 +162,20 @@ namespace CityOfTulsaUI.Models {
          }
       }
 
-      public string Description {
-         get {
-            StringBuilder sb = new StringBuilder();
+      public string GetDescription(string delimiter = " ") {
 
-            sb.Append(
-               (this.UseTFDDateFilter ? this.TFDDateFilterType.ToString().ToSpacedOutTextByCaps() + ": " + this.DisplayDate1.ToString("MM/dd/yyyy") + " " : "")
-               + (this.UseTFDDateFilter && this.TFDDateFilterType == DateFilterType.BetweenDates ? " and " + this.DisplayDate2.ToString("MM/dd/yyyy") : "")
-               + (this.UseTFDProblemFilter ? " Problems: { " + string.Join(", ", this.TFDProblems) + " }" : "")
-               + (this.UseTFDDivisionFilter ? " Divisions: { " + string.Join(", ", this.TFDDivsions) + " }" : "")
-               + (this.UseTFDStationFilter ? " Stations: { " + string.Join(", ", this.TFDStations) + " }" : "")
-               + (this.UseTFDVehicleFilter ? " Vehicles: { " + string.Join(", ", this.TFDVehicles) + " }" : "")
-               );
+         StringBuilder sb = new StringBuilder();
 
-            return sb.ToString().Trim();
-         }
+         sb.Append(
+            (this.UseTFDDateFilter ? this.TFDDateFilterType.ToString().ToSpacedOutTextByCaps() + ": " + this.DisplayDate1.ToString("MM/dd/yyyy") + " " : "")
+            + (this.UseTFDDateFilter && this.TFDDateFilterType == DateFilterType.BetweenDates ? " and " + this.DisplayDate2.ToString("MM/dd/yyyy") : "")
+            + (this.UseTFDProblemFilter && this.TFDProblems.Count > 0 ? (delimiter ?? "") + "Problems: { " + string.Join(", ", this.TFDProblems) + " }" : "")
+            + (this.UseTFDDivisionFilter && this.TFDDivsions.Count > 0 ? (delimiter ?? "") + "Divisions: { " + string.Join(", ", this.TFDDivsions) + " }" : "")
+            + (this.UseTFDStationFilter && this.TFDStations.Count > 0 ? (delimiter ?? "") + "Stations: { " + string.Join(", ", this.TFDStations) + " }" : "")
+            + (this.UseTFDVehicleFilter && this.TFDVehicles.Count > 0 ? (delimiter ?? "") + "Vehicles: { " + string.Join(", ", this.TFDVehicles) + " }" : "")
+            );
+
+         return sb.ToString().Trim((delimiter ?? "").ToCharArray()).Trim();
       }
    }
 }

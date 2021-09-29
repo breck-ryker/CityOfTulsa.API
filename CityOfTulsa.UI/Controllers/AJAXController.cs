@@ -347,6 +347,13 @@ namespace CityOfTulsaUI.Controllers {
 
                case "tfd.run-search":
 
+                  int returnCode = CommonLib.validateDateFilters(model, ref payload);
+
+                  if (returnCode < 0) {
+                     payload.returncode = returnCode.ToString();
+                     break;
+                  }
+
                   DateTime minDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MinDate : DateTime.MinValue);
                   DateTime maxDate = (model.QuerySettings.UseTFDDateFilter ? model.QuerySettings.MaxDate : DateTime.MinValue);
                   string problems = (model.QuerySettings.UseTFDProblemFilter && model.QuerySettings.TFDProblems.Count > 0 ? string.Join(",", model.QuerySettings.TFDProblems) : null);

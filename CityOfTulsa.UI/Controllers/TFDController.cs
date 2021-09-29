@@ -212,7 +212,7 @@ namespace CityOfTulsaUI.Controllers {
             IEnumerable<FireEventHelper> events = JsonConvert.DeserializeObject<IEnumerable<FireEventHelper>>(readTask.Result);
 
             ViewBag.FireEvents = events;
-            ViewBag.QueryDescription = model.QuerySettings.Description;
+            ViewBag.QueryDescription = model.QuerySettings.GetDescription("<br/>");
          }
          else {
             ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");

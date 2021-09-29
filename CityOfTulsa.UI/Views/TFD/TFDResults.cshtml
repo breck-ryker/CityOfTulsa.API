@@ -44,7 +44,7 @@
 @if (!(string.IsNullOrWhiteSpace(qryDesc))) {
    <div class="row mt-2" id="query_desc">
       <div class="col">
-            <p class="text-muted">Query Parameters: @qryDesc</p>
+            <p class="text-muted">Query Parameters: @Html.Raw(qryDesc)</p>
       </div>
    </div>
 }
