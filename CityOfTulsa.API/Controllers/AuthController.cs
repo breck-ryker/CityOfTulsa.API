@@ -1,9 +1,11 @@
 ﻿
 
+using CityOfTulsaAPI.Classes;
 using CityOfTulsaData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,14 +19,15 @@ namespace CityOfTulsaAPI.Controllers {
    public class AuthController : ControllerBase {
 
       private IConfiguration _config;
-      //private readonly string? _generalPassword = null;
-      //private const string CONST_AppSettings_GeneralPasswordName = "GeneralPassword";
+      private readonly AppSettings _appSettings;
 
-      public AuthController(IConfiguration config) {
+      public AuthController(
+         IConfiguration config,
+         IOptions<AppSettings> appSettings
+      ) {
 
          _config = config;
-
-         //_generalPassword = _config.GetValue<string>(CONST_AppSettings_GeneralPasswordName);
+         _appSettings = appSettings.Value;
       }
 
       [AllowAnonymous]
@@ -44,10 +47,7 @@ namespace CityOfTulsaAPI.Controllers {
 
       private string GenerateJSONWebToken(UserAuthInfo userInfo) {
 
-         string jwtKey = _config["AppSettings:JWT:Key"];
-         string jwtIssuer = _config["AppSettings:JWT:Issuer"];
-
-         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
+         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT.Key));
          var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
          var claims = new[] {
@@ -58,8 +58,8 @@ namespace CityOfTulsaAPI.Controllers {
          };
 
          var token = new JwtSecurityToken(
-            jwtIssuer,
-            jwtIssuer,
+            _appSettings.JWT.Issuer,
+            _appSettings.JWT.Audience,
             claims,
             expires: DateTime.Now.AddDays(7),
             signingCredentials: credentials
@@ -70,10 +70,8 @@ namespace CityOfTulsaAPI.Controllers {
 
       private UserAuthInfo? AuthenticateUser(UserAuthInfo login) {
 
-         string _generalPassword = _config["AppSettings:JWT:Key"];
-
          //Validate the User Credentials       
-         if ((_generalPassword ?? "").Equals((login.Password ?? ""))) {
+         if ((_appSettings.GeneralPassword ?? "").Equals((login.Password ?? ""))) {
             return login;
          }
 

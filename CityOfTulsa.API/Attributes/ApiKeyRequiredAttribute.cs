@@ -12,9 +12,6 @@ namespace CityOfTulsaAPI.Attributes {
    [AttributeUsage(validOn: AttributeTargets.Class | AttributeTargets.Method)]
    public class ApiKeyRequiredAttribute : Attribute, IAsyncActionFilter {
 
-      //private const string CONST_AppSettings_ApiKeyName = "APIKey";
-      //private const string CONST_Headers_ApiKeyName = "X-API-KEY";
-
       private AppSettings? _appSettings = null;
 
       public async Task OnActionExecutionAsync(
@@ -41,10 +38,6 @@ namespace CityOfTulsaAPI.Attributes {
 
             return;
          }
-
-         //var appSettings = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
-
-         //var apiKey = appSettings.GetValue<string>(CONST_AppSettings_ApiKeyName);
 
          if (_appSettings != null && !(_appSettings.APIKey.Equals(headerApiKey))) {
 

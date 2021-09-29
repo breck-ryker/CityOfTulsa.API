@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 
 namespace CityOfTulsaUI.Classes {
 
-   public class PathSettings {
+   public class AppSettings {
 
-      public PathSettings() {
-         //todo
-      }
+      public AppSettings() { }
 
       public string APISwaggerURL { get; set; } = null;
       public string APILogInURL { get; set; } = null;
       public string APILogInPassword { get; set; } = null;
       public string APIAuthMethod { get; set; } = null;
       public string APIKey { get; set; } = null;
+      public string HeaderAPIKeyName { get; set; } = null;
 
       public string TFDProblemsURL { get; set; } = null;
       public string TFDDivisionsURL { get; set; } = null;

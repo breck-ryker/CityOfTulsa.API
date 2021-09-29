@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class JWTOrApiKeyRequiredAttribute : Attribute, IAuthorizationFilter {
@@ -58,12 +59,12 @@ public class JWTOrApiKeyRequiredAttribute : Attribute, IAuthorizationFilter {
          }
          else if (!(string.IsNullOrWhiteSpace(_appSettings?.HeaderAPIKeyName))) {
 
-            //if the request header doesn't contain the authorization header, try to get the API-Key.
+            //if the request header doesn't contain the authorization header, try to get the API Key.
             Microsoft.Extensions.Primitives.StringValues values;
             var gotVal = context.HttpContext.Request.Headers.TryGetValue(_appSettings.HeaderAPIKeyName, out values);
             var keyValue = values.FirstOrDefault();
 
-            //if the API-Key value is not null. validate the API-Key.
+            //if the API Key value is not null. validate the API-Key.
             if ((keyValue ?? "").Equals(_appSettings.APIKey)) {
 
                context.HttpContext.Response.Headers.Add(_appSettings.HeaderAPIKeyName, keyValue);
@@ -87,17 +88,37 @@ public class JWTOrApiKeyRequiredAttribute : Attribute, IAuthorizationFilter {
 
    public bool IsValidToken(string authToken) {
 
-      //string jwtKey = _config["JWT:Key"];
-      //string jwtIssuer = _config["JWT:Issuer"];
-
-      if (string.IsNullOrWhiteSpace(_appSettings?.JWT?.Key)) {
+      if (string.IsNullOrWhiteSpace(authToken) || string.IsNullOrWhiteSpace(_appSettings?.JWT?.Key)) {
          return false;
       }
 
-      var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT.Key));
-      var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+      if (authToken.IndexOf(' ') >= 0) {
+         var parts = authToken.Split(' ');
+         authToken = parts[parts.Length - 1];
+      }
 
-      //validate Token here  
+      var securityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_appSettings.JWT.Key));
+
+      var tokenHandler = new JwtSecurityTokenHandler();
+
+      try {
+         tokenHandler.ValidateToken(
+            authToken, 
+            new TokenValidationParameters {
+               ValidateIssuerSigningKey = true,
+               ValidateIssuer = false,
+               ValidateAudience = false,
+               ValidIssuer = _appSettings.JWT.Issuer,
+               //ValidAudience = ,
+               IssuerSigningKey = securityKey
+            }, 
+            out SecurityToken validatedToken
+         );
+      }
+      catch {
+         return false;
+      }
+
       return true;
    }
 }

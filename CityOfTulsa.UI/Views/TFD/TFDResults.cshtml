@@ -4,10 +4,14 @@
 
 @{
    ViewData["Title"] = "TFD Dispatch Data - Search Results";
+   string errorMsg = ViewBag.ErrorMessage;
    List<CityOfTulsaData.FireEventHelper> listEvents = (List<CityOfTulsaData.FireEventHelper>)ViewBag.FireEvents;
 
    if (listEvents == null || listEvents.Count == 0) {
       <h5 class="text-danger">No search results found.</h5>
+      if (!(string.IsNullOrWhiteSpace(errorMsg))) {
+         <p class="mt-4 text-danger">@errorMsg</p>
+      }
       return;
    }
 }

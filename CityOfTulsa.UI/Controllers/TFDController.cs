@@ -24,21 +24,18 @@ namespace CityOfTulsaUI.Controllers {
       private readonly ILogger<HomeController> _logger;
       private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
-      private readonly PathSettings _pathSettings;
-      private readonly string _apiKey = null;
+      private readonly AppSettings _appSettings;
 
       public TFDController(
          ILogger<HomeController> logger,
          IMemoryCache memoryCache,
          IConfiguration config,
-         IOptions<PathSettings> pathSettings
+         IOptions<AppSettings> appSettings
       ) {
          _logger = logger;
          _cache = memoryCache;
          _config = config;
-         _pathSettings = pathSettings.Value;
-
-         _apiKey = _config.GetValue<string>(CommonLib.CONST_AppSettings_ApiKeyName);
+         _appSettings = appSettings.Value;
       }
 
       public IActionResult TFDSearch() {
@@ -46,7 +43,7 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel(_pathSettings);
+            model = new UserModel();
          }
 
          List<string> problems = null;
@@ -56,7 +53,7 @@ namespace CityOfTulsaUI.Controllers {
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Problems.ToString(), out problems))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDProblemsURL));
+            var task = Task.Run(() => _httpClient.GetAsync(_appSettings.TFDProblemsURL));
             task.Wait();
             var result = task.Result;
 
@@ -81,7 +78,7 @@ namespace CityOfTulsaUI.Controllers {
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Divisions.ToString(), out divisions))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDDivisionsURL));
+            var task = Task.Run(() => _httpClient.GetAsync(_appSettings.TFDDivisionsURL));
             task.Wait();
             var result = task.Result;
 
@@ -106,7 +103,7 @@ namespace CityOfTulsaUI.Controllers {
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_Stations.ToString(), out stations))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDStationsURL));
+            var task = Task.Run(() => _httpClient.GetAsync(_appSettings.TFDStationsURL));
             task.Wait();
             var result = task.Result;
 
@@ -131,7 +128,7 @@ namespace CityOfTulsaUI.Controllers {
 
          if (!(_cache.TryGetValue(CacheKeys.COT_API_TFD_VehicleIDs.ToString(), out vehicles))) {
 
-            var task = Task.Run(() => _httpClient.GetAsync(_pathSettings.TFDVehicleIDsURL));
+            var task = Task.Run(() => _httpClient.GetAsync(_appSettings.TFDVehicleIDsURL));
             task.Wait();
             var result = task.Result;
 
@@ -159,8 +156,6 @@ namespace CityOfTulsaUI.Controllers {
          this.ViewBag.Stations = stations;
          this.ViewBag.Vehicles = vehicles;
 
-         if (model.PathSettings == null) { model.PathSettings = _pathSettings; }
-
          HttpContext.Session.Set("UserModel", model);
 
          return View(model);
@@ -171,7 +166,7 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
-            model = new UserModel(_pathSettings);
+            model = new UserModel();
          }
 
          model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
@@ -194,14 +189,14 @@ namespace CityOfTulsaUI.Controllers {
             { "vehicles", vehicles }
          };
 
-         string url = QueryHelpers.AddQueryString(_pathSettings.TFDEventsURL, qryString);
+         string url = QueryHelpers.AddQueryString(_appSettings.TFDEventsURL, qryString);
 
-         if (model.PathSettings.APIAuthMethod == "api-key") {
+         if (_appSettings.APIAuthMethod == "api-key") {
             _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+            _httpClient.DefaultRequestHeaders.Add(_appSettings.HeaderAPIKeyName, _appSettings.APIKey);
          }
-         else if (model.PathSettings.APIAuthMethod == "jwt") {
-            model.VerifyAPIToken();
+         else if (_appSettings.APIAuthMethod == "jwt") {
+            model.VerifyAPIToken(_appSettings.APILogInURL);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
          }
 

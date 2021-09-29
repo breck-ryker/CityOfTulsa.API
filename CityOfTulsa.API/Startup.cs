@@ -30,7 +30,7 @@ namespace CityOfTulsa.API {
       // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
       public void ConfigureServices(IServiceCollection services) {
 
-         string jwtKey = this.Configuration["AppSettings:JWT:Key"];
+         //string jwtKey = this.Configuration["AppSettings:JWT:Key"];
 
          //https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58084628#58084628
          services.AddControllers().AddNewtonsoftJson(
@@ -57,6 +57,7 @@ namespace CityOfTulsa.API {
 
          AppSettings appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
          services.AddSingleton(appSettings);
+         services.Configure<AppSettings>(this.Configuration.GetSection("AppSettings"));
 
          services.AddAuthentication(x =>
          {
@@ -71,7 +72,8 @@ namespace CityOfTulsa.API {
                ValidateIssuerSigningKey = true,
                ValidateIssuer = false,
                ValidateAudience = false,
-               IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtKey))
+               ValidIssuer = appSettings.JWT.Issuer,
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(appSettings.JWT.Key))
             };
          });
       }

@@ -36,7 +36,11 @@ namespace CityOfTulsa.UI {
             
          services.AddSession();
 
-         services.Configure<PathSettings>(this.Configuration);
+         services.AddControllers();
+
+         //AppSettings appSettings = Configuration.GetSection("AppSettings").Get<AppSettings>();
+         //services.AddSingleton(appSettings);
+         services.Configure<AppSettings>(this.Configuration.GetSection("AppSettings"));
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

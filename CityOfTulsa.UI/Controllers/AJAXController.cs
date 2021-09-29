@@ -25,21 +25,18 @@ namespace CityOfTulsaUI.Controllers {
       private readonly ILogger<HomeController> _logger;
       private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
-      private readonly PathSettings _pathSettings;
-      private readonly string _apiKey = null;
+      private readonly AppSettings _appSettings;
 
       public AJAXController(
          ILogger<HomeController> logger,
          IMemoryCache memoryCache,
          IConfiguration config,
-         IOptions< PathSettings > pathSettings
+         IOptions<AppSettings> appSettings
       ) {
          _logger = logger;
          _cache = memoryCache;
          _config = config;
-         _pathSettings = pathSettings.Value;
-
-         _apiKey = _config.GetValue<string>(CommonLib.CONST_AppSettings_ApiKeyName);
+         _appSettings = appSettings.Value;
       }
 
       [HttpPost]
@@ -53,14 +50,14 @@ namespace CityOfTulsaUI.Controllers {
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
          
          if (model == null) {
-            model = new UserModel(_pathSettings);
+            model = new UserModel();
          }
 
          model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
          model.PrevQuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.PrevQuerySettings");
 
-         if (model.PathSettings.APIAuthMethod == "jwt") {
-            model.VerifyAPIToken();
+         if (_appSettings.APIAuthMethod == "jwt") {
+            model.VerifyAPIToken(_appSettings.APILogInURL);
          }
 
          try {
@@ -369,13 +366,13 @@ namespace CityOfTulsaUI.Controllers {
 
                   model.ExecuteQuery();
 
-                  url = QueryHelpers.AddQueryString(_pathSettings.TFDEventCountURL, dictQueryString);
+                  url = QueryHelpers.AddQueryString(_appSettings.TFDEventCountURL, dictQueryString);
 
-                  if (model.PathSettings.APIAuthMethod == "api-key") {
+                  if (_appSettings.APIAuthMethod == "api-key") {
                      _httpClient.DefaultRequestHeaders.Clear();
-                     _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                     _httpClient.DefaultRequestHeaders.Add(_appSettings.HeaderAPIKeyName, _appSettings.APIKey);
                   }
-                  else if (model.PathSettings.APIAuthMethod == "jwt") {
+                  else if (_appSettings.APIAuthMethod == "jwt") {
                      _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
                   }
 
@@ -406,13 +403,13 @@ namespace CityOfTulsaUI.Controllers {
                      { "incidentids", msg.ids[0] }
                   };
 
-                  url = QueryHelpers.AddQueryString(_pathSettings.TFDVehiclesURL, dictQueryString);
+                  url = QueryHelpers.AddQueryString(_appSettings.TFDVehiclesURL, dictQueryString);
 
-                  if (model.PathSettings.APIAuthMethod == "api-key") {
+                  if (_appSettings.APIAuthMethod == "api-key") {
                      _httpClient.DefaultRequestHeaders.Clear();
-                     _httpClient.DefaultRequestHeaders.Add(CommonLib.CONST_Headers_ApiKeyName, _apiKey);
+                     _httpClient.DefaultRequestHeaders.Add(_appSettings.HeaderAPIKeyName, _appSettings.APIKey);
                   }
-                  else if (model.PathSettings.APIAuthMethod == "jwt") {
+                  else if (_appSettings.APIAuthMethod == "jwt") {
                      _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", model.APIToken);
                   }
 

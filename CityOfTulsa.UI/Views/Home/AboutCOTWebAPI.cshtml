@@ -2,6 +2,7 @@
 @model CityOfTulsaUI.Models.UserModel
 
 @{
+   CityOfTulsaUI.Classes.AppSettings appSettings = this.ViewBag.AppSettings;
    ViewData["Title"] = "CityofTulsaData.com - Web API";
 }
 
@@ -22,9 +23,9 @@
       <h5 class="card-title">@ViewData["Title"]</h5>
       <p class="card-text text-muted">* Some methods in the Web API require an API Key *</p>
       <p class="card-text">You can explore the CityofTulsaData.com Web API here:</p>
-      <a href="@((Model?.PathSettings.APISwaggerURL ?? ""))" target="_blank" class="btn btn-primary">Web API</a>
+      <a href="@((appSettings.APISwaggerURL ?? ""))" target="_blank" class="btn btn-primary">Web API</a>
    </div>
    <div class="card-footer text-muted">
-      (Not affiliated with <a class="" href="@((Model?.PathSettings.CityOfTulsaOrgURL ?? ""))" target="_blank"><u>City of Tulsa</u></a>)
+      (Not affiliated with <a class="" href="@((appSettings.CityOfTulsaOrgURL ?? ""))" target="_blank"><u>City of Tulsa</u></a>)
    </div>
 </div>
