@@ -221,6 +221,7 @@ namespace CityOfTulsaUI.Controllers {
          else {
             ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
 
+            ViewBag.ErrorMessage = ((int)result.StatusCode).ToString() + ": " + (string.IsNullOrWhiteSpace(result.ReasonPhrase) ? "{ReasonPhrase empty}" : result.ReasonPhrase);
             ViewBag.FireEvents = null;
          }
 

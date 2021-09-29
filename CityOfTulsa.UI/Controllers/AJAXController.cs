@@ -393,7 +393,7 @@ namespace CityOfTulsaUI.Controllers {
                   }
                   else {
                      ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
-                     payload.msg = ((int)searchResult.StatusCode).ToString() + ": " + searchResult.ReasonPhrase;
+                     payload.msg = ((int)searchResult.StatusCode).ToString() + ": " + (string.IsNullOrWhiteSpace(searchResult.ReasonPhrase) ? "{ReasonPhrase empty}" : searchResult.ReasonPhrase);
                      payload.returncode = (-1).ToString();
                   }
 
@@ -431,7 +431,7 @@ namespace CityOfTulsaUI.Controllers {
                   }
                   else {
                      ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
-                     payload.msg = ((int)vehicleResult.StatusCode).ToString() + ": " + vehicleResult.ReasonPhrase;
+                     payload.msg = ((int)vehicleResult.StatusCode).ToString() + ": " + (string.IsNullOrWhiteSpace(vehicleResult.ReasonPhrase) ? "{ReasonPhrase empty}" : vehicleResult.ReasonPhrase);
                      payload.returncode = (-1).ToString();
                   }
 

@@ -73,12 +73,12 @@ public class JWTOrApiKeyRequiredAttribute : Attribute, IAuthorizationFilter {
             }
 
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-            context.HttpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "No API Key provided";
+            context.HttpContext.Response.HttpContext.Features.Get<IHttpResponseFeature>().ReasonPhrase = "API Key is invalid";
 
-            context.Result = new JsonResult("No API Key provided") {
+            context.Result = new JsonResult("API Key is invalid") {
                Value = new {
                   Status = "Error",
-                  Message = "No API Key provided"
+                  Message = "API Key is invalid"
                },
             };
          }
