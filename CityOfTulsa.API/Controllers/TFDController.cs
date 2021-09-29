@@ -114,8 +114,9 @@ namespace CityOfTulsaAPI.Controllers {
       }
 
       [HttpGet("eventcount")]
-      [ApiKeyRequired]
+      //[ApiKeyRequired]
       //[Authorize]
+      [JWTOrApiKeyRequired]
       public int GetEventCount(
          string? mindate = null,
          string? maxdate = null,
