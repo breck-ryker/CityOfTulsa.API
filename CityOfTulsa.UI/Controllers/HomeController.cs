@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using static CityOfTulsaUI.Classes.CommonLib;
 
@@ -46,24 +48,24 @@ namespace CityOfTulsaUI.Controllers {
 
       public IActionResult Index() {
 
-         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+         UserModel model = this.VerifyUserModel();
 
-         if (model == null) {
-            model = new UserModel();
-            HttpContext.Session.Set("UserModel", model);
-         }
+         ////Type type = typeof(AppSettings);
+         ////PropertyInfo[] properties = type.GetProperties();
+         ////StringBuilder sb = new StringBuilder();
+
+         ////foreach (PropertyInfo prop in properties) {
+         ////   sb.Append(string.Format("<br/>" + "{0} = {1}", prop.Name, prop.GetValue(_appSettings, null)));
+         ////}
+
+         ////this.ViewBag.AppSettingsList = sb.ToString();
 
          return View(model);
       }
 
       public IActionResult AboutCOTWebAPI() {
 
-         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
-
-         if (model == null) {
-            model = new UserModel();
-            HttpContext.Session.Set("UserModel", model);
-         }
+         UserModel model = this.VerifyUserModel();
 
          this.ViewBag.AppSettings = _appSettings;
 
@@ -72,6 +74,13 @@ namespace CityOfTulsaUI.Controllers {
 
       public IActionResult AboutCOTProject() {
 
+         UserModel model = this.VerifyUserModel();
+
+         return View(model);
+      }
+
+      private UserModel VerifyUserModel() {
+
          UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
 
          if (model == null) {
@@ -79,7 +88,7 @@ namespace CityOfTulsaUI.Controllers {
             HttpContext.Session.Set("UserModel", model);
          }
 
-         return View(model);
+         return model;
       }
 
       [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

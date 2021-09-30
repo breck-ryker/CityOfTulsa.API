@@ -1,5 +1,6 @@
 ﻿@{
    ViewData["Title"] = "Home Page";
+   string appSettingsList = ViewBag.AppSettingsList;
 }
 
 @section Styles
@@ -10,4 +11,7 @@
 <div class="text-center">
    <h1 class="display-4">Welcome</h1>
    <p>Click a category to explore City Of Tulsa data.</p>
+   @if (!(string.IsNullOrWhiteSpace(appSettingsList))) {
+      <p class="font-weight-bold" mt-5>@Html.Raw(appSettingsList)</p>
+   }
 </div>

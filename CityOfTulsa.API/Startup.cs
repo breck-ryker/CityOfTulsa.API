@@ -38,7 +38,7 @@ namespace CityOfTulsa.API {
             );
 
          services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("CityOfTulsa"))
+            options.UseSqlServer(Configuration.GetConnectionString("CityOfTulsa_AZURE"))
             );
 
          services.AddSwaggerGen(c => 

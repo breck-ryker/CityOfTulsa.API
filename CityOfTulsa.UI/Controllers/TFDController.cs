@@ -40,11 +40,7 @@ namespace CityOfTulsaUI.Controllers {
 
       public IActionResult TFDSearch() {
 
-         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
-
-         if (model == null) {
-            model = new UserModel();
-         }
+         UserModel model = this.VerifyUserModel();
 
          List<string> problems = null;
          List<string> divisions = null;
@@ -163,11 +159,7 @@ namespace CityOfTulsaUI.Controllers {
 
       public IActionResult TFDResults() {
 
-         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
-
-         if (model == null) {
-            model = new UserModel();
-         }
+         UserModel model = this.VerifyUserModel();
 
          model.QuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.QuerySettings");
          model.PrevQuerySettings = HttpContext.Session.Get<QuerySettings>("UserModel.PrevQuerySettings");
@@ -222,6 +214,18 @@ namespace CityOfTulsaUI.Controllers {
          }
 
          return View(model);
+      }
+
+      private UserModel VerifyUserModel() {
+
+         UserModel model = HttpContext.Session.Get<UserModel>("UserModel");
+
+         if (model == null) {
+            model = new UserModel();
+            HttpContext.Session.Set("UserModel", model);
+         }
+
+         return model;
       }
    }
 }

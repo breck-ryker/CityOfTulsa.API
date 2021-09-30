@@ -58,8 +58,8 @@ namespace CityOfTulsaAPI.Controllers {
          };
 
          var token = new JwtSecurityToken(
-            _appSettings.JWT.Issuer,
-            _appSettings.JWT.Audience,
+            null, //_appSettings.JWT.Issuer,
+            null, //_appSettings.JWT.Audience,
             claims,
             expires: DateTime.Now.AddDays(7),
             signingCredentials: credentials

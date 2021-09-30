@@ -9,6 +9,8 @@ namespace CityOfTulsaUI.Classes {
 
       public AppSettings() { }
 
+      public string AppSettingsName { get; set; } = null;
+
       public string APISwaggerURL { get; set; } = null;
       public string APILogInURL { get; set; } = null;
       public string APILogInPassword { get; set; } = null;
