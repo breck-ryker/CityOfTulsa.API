@@ -236,7 +236,7 @@ function SetDatepickers() {
    $('input.datepicker').datepicker({
       autoclose: true,
       format: 'mm/dd/yyyy',
-      startDate: '09/14/2021',
+      startDate: '09/15/2021',
       endDate: sToday,
       todayHighlight: true
    }).on('changeDate', function (e) {

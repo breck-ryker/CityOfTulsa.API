@@ -37,14 +37,16 @@ namespace CityOfTulsa.API {
             x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
-         services.AddDbContext<DatabaseContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("CityOfTulsa_AZURE"))
+         services.AddDbContext<DatabaseContext>(
+            options => options.UseSqlServer(Configuration.GetConnectionString("CityOfTulsa_AZURE"))
             );
 
-         services.AddSwaggerGen(c => 
-            {
-               c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "City of Tulsa Data", Version = "v1" });
-            });
+         services.AddSwaggerGen(
+            c => 
+               {
+                  c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "CityOfTulsaData.com Web API", Version = "v1" });
+               }
+            );
 
          services.AddCors(a => {
             a.AddPolicy("AllowAll", builder =>
