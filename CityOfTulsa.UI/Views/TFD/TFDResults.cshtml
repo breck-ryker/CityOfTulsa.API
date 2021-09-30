@@ -31,7 +31,7 @@
    <script src="@Url.Content("/js/tfdresults.js")"></script>
 }
 
-<div class="row">
+<div class="row py-1" id="backtosearch_row">
 
    <div class="col align-self-center">
       <h5 class="text-muted">@ViewData["Title"]</h5>
@@ -42,7 +42,7 @@
 </div>
 
 @if (!(string.IsNullOrWhiteSpace(qryDesc))) {
-   <div class="row mt-2" id="query_desc">
+   <div class="row py-1" id="query_desc">
       <div class="col">
             <p class="text-muted">Query Parameters: @Html.Raw(qryDesc)</p>
       </div>

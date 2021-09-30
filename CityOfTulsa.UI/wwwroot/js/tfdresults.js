@@ -51,6 +51,14 @@ $(document).ready(function () {
       var url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(lat + ',' + lon);
       window.open(url, '_blank');
    });
+
+   $(document).on('scroll', function () {
+      if ($(window).scrollTop() > 60) {
+         $('#backtosearch_row').addClass('onscroll-scheme');
+      } else {
+         $('#backtosearch_row').removeClass('onscroll-scheme');
+      }
+   });
    
 });
 

@@ -16,13 +16,11 @@
 }
 
 <div class="card text-center">
-   @*<div class="card-header">
-      Web API
-   </div>*@
+   @*<div class="card-header"></div>*@
    <div class="card-body">
       <h5 class="card-title">@ViewData["Title"]</h5>
       <p class="card-text text-muted">* Some web methods require a Json Web Token or API Key *</p>
-      <p class="card-text">You can explore the CityofTulsaData.com Web API here:</p>
+      <p class="card-text">Explore the CityofTulsaData.com Web API here:</p>
       <a href="@((appSettings.APISwaggerURL ?? ""))" target="_blank" class="btn btn-primary">Web API</a>
    </div>
    <div class="card-footer text-muted">

@@ -40,8 +40,24 @@ table.tfd-fireevent-detail {
 }
 
 #query_desc {
-   max-height:80px;
-   overflow-y:auto;
-   font-size:smaller;
-   border-top:1px solid lightgray;
+   max-height: 60px;
+   overflow-y: auto;
+   font-size: smaller;
+   border-top: 1px solid lightgray;
+   border-bottom: 1px solid lightgray;
+/*   position: sticky;
+   top: 38px;
+   background-color: white;
+   z-index: 2;*/
+}
+
+#backtosearch_row {
+   position:sticky;
+   top:0px;
+   background-color:white;
+   z-index:2;
+}
+
+.onscroll-scheme {
+   border-bottom:1px solid lightgray;
 }
