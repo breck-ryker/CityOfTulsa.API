@@ -10,6 +10,7 @@
 
    <title>@ViewData["Title"] - CityofTulsaData.com</title>
    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+   <link rel="stylesheet" href="~/lib/tooltipster/css/tooltipster.bundle.min.css" />
    <link rel="stylesheet" href="~/css/site.css" />
    <link rel="stylesheet" href="~/css/spinner.css" />
 
@@ -18,7 +19,7 @@
 </head>
 <body>
    <header>
-      <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" id="main_navbar">
+      <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-1" id="main_navbar">
          <div class="container">
             <a class="navbar-brand d-sm-none d-md-block" asp-area="" asp-controller="Home" asp-action="Index">CityofTulsaData.com</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,7 +30,7 @@
                   <li class="nav-item" data-pagekey="home">
                      <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                   </li>
-                  <li class="nav-item" data-pagekey="tfddata">
+                  <li class="nav-item tooltipster" data-pagekey="tfddata" title="Search Tulsa Fire Dispatch data by date, crisis type, responding division/station, or emergency vehicle ID">
                      <a class="nav-link text-dark" asp-area="" asp-controller="TFD" asp-action="TFDSearch">Search TFD Data</a>
                   </li>
                   @*<li class="nav-item" data-pagekey="towlist">
@@ -66,6 +67,7 @@
 
    <script src="~/lib/jquery/dist/jquery.min.js"></script>
    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="~/lib/tooltipster/js/tooltipster.bundle.min.js"></script>
    <script src="~/js/common-lib.js" asp-append-version="true"></script>
    <script src="~/js/site.js" asp-append-version="true"></script>
    @await RenderSectionAsync("Scripts", required: false)

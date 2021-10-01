@@ -58,7 +58,7 @@ namespace CityOfTulsaUI.Controllers {
                var readTask = result.Content.ReadAsStringAsync();
                readTask.Wait();
 
-               problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+               problems = JsonConvert.DeserializeObject<List<string>>(readTask.Result).OrderBy(p => p).ToList();
             }
             else {
                ModelState.AddModelError(string.Empty, "TFD Problem Data: Server Error");
@@ -83,7 +83,7 @@ namespace CityOfTulsaUI.Controllers {
                var readTask = result.Content.ReadAsStringAsync();
                readTask.Wait();
 
-               divisions = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+               divisions = JsonConvert.DeserializeObject<List<string>>(readTask.Result).OrderBy(d => d).ToList();
             }
             else {
                ModelState.AddModelError(string.Empty, "TFD Division Data: Server Error");
@@ -108,7 +108,7 @@ namespace CityOfTulsaUI.Controllers {
                var readTask = result.Content.ReadAsStringAsync();
                readTask.Wait();
 
-               stations = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+               stations = JsonConvert.DeserializeObject<List<string>>(readTask.Result).OrderBy(s => s).ToList();
             }
             else {
                ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
@@ -133,7 +133,7 @@ namespace CityOfTulsaUI.Controllers {
                var readTask = result.Content.ReadAsStringAsync();
                readTask.Wait();
 
-               vehicles = JsonConvert.DeserializeObject<List<string>>(readTask.Result);
+               vehicles = JsonConvert.DeserializeObject<List<string>>(readTask.Result).OrderBy(v => v).ToList();
             }
             else {
                ModelState.AddModelError(string.Empty, "TFD Vehicle Data: Server Error");

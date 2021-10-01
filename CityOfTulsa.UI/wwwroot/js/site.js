@@ -6,6 +6,23 @@ $(document).ready(function () {
    }
    _commonlib.addListener('_ProcessAJAXCallbackResults', ProcessAJAXCallbackResults_Site);
 
+   $('.tooltipster').tooltipster({
+      animation: 'fade',
+      delay: 100,
+      theme: 'tooltipster-default',
+      touchDevices: false,
+      trigger: 'hover'
+   });
+
+   $('.tooltipsterLeft').tooltipster({
+      animation: 'fade',
+      delay: 100,
+      theme: 'tooltipster-default',
+      touchDevices: false,
+      trigger: 'hover',
+      position: 'left'
+   });
+
    $('a.nav-link').off('click').on('click', function (e) {
       ShowSpinner();
    });

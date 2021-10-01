@@ -140,3 +140,8 @@ ul.navbar-nav li.nav-item {
    outline: none;
    box-shadow:none;
 }
+
+div.tooltipster-base {
+   max-width:280px !important;
+   height:auto !important;
+}
