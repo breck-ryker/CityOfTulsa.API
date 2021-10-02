@@ -18,11 +18,10 @@
 
 <ul id="about_list" class="mt-4">
    <li><strong>SSDT_ImportCityOfTulsaData</strong> is the SSDT/SSIS project that periodically reads new json data from the City of Tulsa official website, then loads it into SQL Server</li>
-   <li><a href="https://cityoftulsawebapi.azurewebsites.net/swagger" target="_blank"><strong>CityOfTulsa.API</strong></a> is the ASP.NET Core Web API suite serving the data (some methods require a JWT or API Key)</li>
+   <li><a href="https://cityoftulsawebapi.azurewebsites.net/swagger" target="_blank"><strong>CityOfTulsa.API</strong></a> is the ASP.NET Core Web API suite serving the data. Some methods use attributes that require callers to authenticate via either a Json Web Token (JWT) or API Key</li>
    <li><strong>CityOfTulsa.UI</strong> is the ASP.NET Core interface illustrating access to the Web API</li>
    <li><strong>CityOfTulsa.Data</strong> is the ASP.NET Core class library providing some supporting classes and type extensions</li>
    <li>Projects are stored in <a href="https://github.com/breck-ryker" target="_blank"><strong>GitHub</strong></a></li>
-   <li><a href="https://cityoftulsawebapi.azurewebsites.net/swagger" target="_blank"><strong>CityOfTulsa.API</strong></a> uses method attributes that can authenticate callers via either a Json Web Token (JWT) or API Key</li>
    <li id="tech_list">
       <strong>This project makes use of:</strong>
       <ul class="mt-2">
@@ -41,8 +40,6 @@
          <li>JavaScript</li>
          <li>CSS</li>
          <li>Bootstrap 4</li>
-         <li>DataTables</li>
-         <li>Alertify</li>
       </ul>
    </li>
 </ul>

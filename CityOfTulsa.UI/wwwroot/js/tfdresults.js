@@ -1,4 +1,10 @@
 ﻿var _dt = null;
+const _outlineMarkup = `
+   <table class="tfd-fireevent-detail ml-5">
+      <thead><tr><th>Division</th><th>Station</th><th>Vehicle</th></tr></thead>
+      <tbody>{body}</tbody>
+   </table>
+   `;
 
 $(document).ready(function () {
 
@@ -79,7 +85,7 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
 
          var returnval = responseData.parameters.returncode;
 
-         if (returnval >= 0 && responseData.parameters.markup && responseData.parameters.ids && responseData.parameters.ids.length == 1) {
+         if (returnval >= 0 && responseData.parameters.markup && responseData.parameters.ids && responseData.parameters.ids[0]) {
 
             var vehicles = null;
 
@@ -94,13 +100,6 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
 
             if ($details && $details.length == 1) {
 
-               var outlineMarkup = `
-                  <table class="tfd-fireevent-detail ml-5">
-                     <thead><tr><th>Division</th><th>Station</th><th>Vehicle</th></tr></thead>
-                     <tbody>{body}</tbody>
-                  </table>
-                  `;
-
                var bodyMarkup = '';
 
                function iterateVehicles(item, index, array) {
@@ -109,9 +108,7 @@ function ProcessAJAXCallbackResults_TFDResults(responseData) {
 
                vehicles.forEach(iterateVehicles);
 
-               outlineMarkup = outlineMarkup.replace('{body}', bodyMarkup);
-
-               $details.replaceWith(outlineMarkup);
+               $details.replaceWith(_outlineMarkup.replace('{body}', bodyMarkup));
             }
          }
 

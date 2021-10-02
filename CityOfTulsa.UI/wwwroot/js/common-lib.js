@@ -141,7 +141,7 @@ function CallAJAX(
             data = JSON.parse(data);
             _ProcessAJAXCallbackResults(data);
          },
-         error: function (e) {
+         error: function (xhr, status, err) {
             var dtNow = new Date();
             var nTimeDiff = (dtNow - _pageLoadTime);
             var nTimeDiffSecs = (nTimeDiff / 1000);
@@ -149,7 +149,7 @@ function CallAJAX(
                ReloadPage();
             }
             else {
-               alert('AJAX/ProcessMessage Error on [' + (cmd || '') + ']: ' + e.responseText);
+               alert('AJAX/ProcessMessage Error on [' + (cmd || '') + ']: ' + xhr.responseText);
             }
          }
       });
