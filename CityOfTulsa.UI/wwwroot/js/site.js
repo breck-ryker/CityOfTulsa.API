@@ -23,9 +23,20 @@ $(document).ready(function () {
       position: 'left'
    });
 
-   $('a.nav-link').off('click').on('click', function (e) {
+   $('a.nav-link,.blockui').off('click').on('click', function (e) {
       ShowSpinner();
    });
+
+   //$('input[type = submit]').click(function () {
+   //   $.blockUI({
+   //      css: {
+   //         border: 'none',
+   //         padding: '15px',
+   //         backgroundColor: '#000',
+   //         opacity: .6
+   //      }
+   //   });
+   //});
 
    $('.cot-cmd-btn').off('click').on('click', function (e) {
       var $this = $(this);
