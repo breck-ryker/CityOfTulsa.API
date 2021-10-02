@@ -5,6 +5,7 @@
 @{
    ViewData["Title"] = "TFD Dispatch Data - Search Results";
    string errorMsg = ViewBag.ErrorMessage;
+   string infoMsg = ViewBag.InfoMessage;
    string qryDesc = ViewBag.QueryDescription;
    List<CityOfTulsaData.FireEventHelper> listEvents = (List<CityOfTulsaData.FireEventHelper>)ViewBag.FireEvents;
 
@@ -14,6 +15,10 @@
          <p class="mt-4 text-danger">@errorMsg</p>
       }
       return;
+   }
+
+   if (!(string.IsNullOrWhiteSpace(infoMsg))) {
+      <input type="hidden" id="info_msg" value="@infoMsg" />
    }
 }
 
@@ -37,7 +42,8 @@
       <h5 class="text-muted">@ViewData["Title"]</h5>
    </div>
    <div class="col align-self-center">
-      <a href="/TFD/TFDSearch" data-role="button" class="btn btn-sm btn-secondary">< Back to TFD Search</a>
+      <a href="/TFD/TFDSearch" data-role="button" class="btn btn-sm btn-secondary float-left mr-2"><i class="fas fa-chevron-left"></i><span class="pl-2">Back to TFD Search</span></a>
+      <a href="/TFD/TFDResults?mode=download-csv" data-role="button" class="btn btn-sm btn-secondary float-left tooltipster" title="Download search results"><i class="fas fa-download"></i><span class="pl-1">CSV</span></a>
    </div>
 </div>
 

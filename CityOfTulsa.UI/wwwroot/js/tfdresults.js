@@ -65,6 +65,13 @@ $(document).ready(function () {
          $('#backtosearch_row').removeClass('onscroll-scheme');
       }
    });
+
+   if ($('#info_msg').length == 1) {
+      const infoMsg = $('#info_msg').val();
+      if (infoMsg) {
+         alertify.success(infoMsg);
+      }
+   }
    
 });
 

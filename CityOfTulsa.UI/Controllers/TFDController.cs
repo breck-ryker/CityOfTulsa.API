@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using static CityOfTulsaUI.Classes.CommonLib;
 
@@ -25,6 +26,7 @@ namespace CityOfTulsaUI.Controllers {
       private static readonly HttpClient _httpClient = new();
       private readonly IMemoryCache _cache;
       private readonly AppSettings _appSettings;
+      private static int _eventCountMax = Int32.MinValue;
 
       public TFDController(
          ILogger<HomeController> logger,
@@ -157,7 +159,7 @@ namespace CityOfTulsaUI.Controllers {
          return View(model);
       }
 
-      public IActionResult TFDResults() {
+      public IActionResult TFDResults(string mode) {
 
          UserModel model = this.VerifyUserModel();
 
@@ -203,8 +205,39 @@ namespace CityOfTulsaUI.Controllers {
 
             IEnumerable<FireEventHelper> events = JsonConvert.DeserializeObject<IEnumerable<FireEventHelper>>(readTask.Result);
 
-            ViewBag.FireEvents = events;
-            ViewBag.QueryDescription = model.QuerySettings.GetDescription("<br/>");
+            if (mode == "download-csv") {
+
+               StringBuilder sb = new StringBuilder();
+
+               int i = 0;
+               foreach (FireEventHelper fe in events) {
+
+                  if (i++ == 0) {
+                     sb.Append("Fire Event ID,Incident Number,Problem,Response Date,Address,Latitude,Longitude" + "\r\n");
+                  }
+
+                  sb.Append(
+                     fe.FireEventID.ToString() + ","
+                     + fe?.IncidentNumber + ","
+                     + fe?.Problem + ","
+                     + (fe.ResponseDate.IsValidValue() ? fe.ResponseDate.ToString("MM/dd/yyyy HH:mm") : "") + ","
+                     + fe?.Address + ","
+                     + fe.Latitude.ToString() + ","
+                     + fe.Longitude.ToString()
+                     + "\r\n"
+                     );
+               }
+
+               return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "TFD_DATA.csv");
+            }
+            else {
+               ViewBag.FireEvents = events;
+               ViewBag.QueryDescription = model.QuerySettings.GetDescription("<br/>");
+
+               if (model.TFDEventsCountResult > this.VerifyEventCountMax()) {
+                  ViewBag.InfoMessage = "Maximum results exceeded. Showing " + this.VerifyEventCountMax().ToThousandsSeparatorFormat() + " of " + model.TFDEventsCountResult.ToThousandsSeparatorFormat() + " total results.";
+               }
+            }
          }
          else {
             ModelState.AddModelError(string.Empty, "TFD Station Data: Server Error");
@@ -226,6 +259,26 @@ namespace CityOfTulsaUI.Controllers {
          }
 
          return model;
+      }
+
+      private int VerifyEventCountMax() {
+
+         if (!(_eventCountMax.IsValidPositiveInteger())) {
+
+            var eventTask = Task.Run(() => _httpClient.GetAsync(_appSettings.TFDEventCountMaxURL));
+            eventTask.Wait();
+            var searchResult = eventTask.Result;
+
+            if (searchResult.IsSuccessStatusCode) {
+
+               var readTask = searchResult.Content.ReadAsStringAsync();
+               readTask.Wait();
+
+               _eventCountMax = JsonConvert.DeserializeObject<int>(readTask.Result);
+            }
+         }
+
+         return _eventCountMax;
       }
    }
 }

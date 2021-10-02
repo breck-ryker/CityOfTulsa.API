@@ -7,6 +7,8 @@ namespace CityOfTulsaAPI.Classes {
 
    public class AppSettings {
 
+      public int EventCountMax { get; set; } = 0;
+
       public string APIKey { get; set; } = string.Empty;
       public string HeaderAPIKeyName { get; set; } = string.Empty;
       public string GeneralPassword { get; set; } = string.Empty;

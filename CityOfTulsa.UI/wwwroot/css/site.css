@@ -145,3 +145,8 @@ div.tooltipster-base {
    max-width:280px !important;
    height:auto !important;
 }
+
+div.ajs-message.ajs-success {
+   color:white !important;
+   background-color:darkgreen !important;
+}

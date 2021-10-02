@@ -1,8 +1,11 @@
 ﻿using CityOfTulsaAPI.Attributes;
+using CityOfTulsaAPI.Classes;
 using CityOfTulsaData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +21,17 @@ namespace CityOfTulsaAPI.Controllers {
    public class TFDController : ControllerBase {
 
       private readonly DatabaseContext _dbcontext;
+      private readonly IConfiguration _config;
+      private readonly AppSettings _appSettings;
 
-      public TFDController(DatabaseContext dbcontext) {
+      public TFDController(
+         DatabaseContext dbcontext,
+         IConfiguration config,
+         IOptions<AppSettings> appSettings
+      ) {
          _dbcontext = dbcontext;
+         _config = config;
+         _appSettings = appSettings.Value;
       }
 
       [HttpGet]
@@ -36,7 +47,7 @@ namespace CityOfTulsaAPI.Controllers {
             .Include(e => e.FireVehicles)
             .Select(e => new FireEventHelper(e))
             .OrderByDescending(e => e.ResponseDate)
-            .Take(1000)
+            .Take(_appSettings.EventCountMax)
             ;
       }
 
@@ -79,7 +90,7 @@ namespace CityOfTulsaAPI.Controllers {
             .Include(e => e.FireVehicles)
             .Select(e => new FireEventHelper(e))
             .OrderBy(e => e.ResponseDate)
-            .Take(1000)
+            .Take(_appSettings.EventCountMax)
             ;
       }
 
@@ -123,8 +134,17 @@ namespace CityOfTulsaAPI.Controllers {
                ).Any()
             )
             .Select(e => new FireEventHelper(e))
-            .Take(1000)
+            .Take(_appSettings.EventCountMax)
             ;
+      }
+
+      [HttpGet("eventcountmax")]
+      //[ApiKeyRequired]
+      //[Authorize]
+      //[JWTOrApiKeyRequired]
+      [ResponseCache(Duration = 720, Location = ResponseCacheLocation.Any)]
+      public int GetEventCountMax() {
+         return _appSettings.EventCountMax;
       }
 
       [HttpGet("eventcount")]
