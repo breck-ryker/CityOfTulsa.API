@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>CityOfTulsaAPI</RootNamespace>
     <Nullable>enable</Nullable>
+    <UserSecretsId>6401b6bf-90f0-4b40-b7ed-1cdf45b68e71</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

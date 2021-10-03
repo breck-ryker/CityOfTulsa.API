@@ -21,16 +21,17 @@ namespace CityOfTulsa.API {
    public class Startup {
 
       public IConfiguration Configuration { get; }
+      public IWebHostEnvironment Environment { get; }
 
-      public Startup(IConfiguration config) {
+      public Startup(
+         IConfiguration config,
+         IWebHostEnvironment env
+      ) {
          this.Configuration = config;
+         this.Environment = env;
       }
 
-      // This method gets called by the runtime. Use this method to add services to the container.
-      // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
       public void ConfigureServices(IServiceCollection services) {
-
-         //string jwtKey = this.Configuration["AppSettings:JWT:Key"];
 
          //https://stackoverflow.com/questions/57912012/net-core-3-upgrade-cors-and-jsoncycle-xmlhttprequest-error/58084628#58084628
          services.AddControllers().AddNewtonsoftJson(
