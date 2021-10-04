@@ -5,6 +5,7 @@ using CityOfTulsaData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -20,19 +21,24 @@ namespace CityOfTulsaAPI.Controllers {
 
       private IConfiguration _config;
       private readonly AppSettings _appSettings;
+      private readonly ILogger _logger;
 
       public AuthController(
          IConfiguration config,
-         IOptions<AppSettings> appSettings
+         IOptions<AppSettings> appSettings,
+         ILogger<TFDController> logger
       ) {
 
          _config = config;
          _appSettings = appSettings.Value;
+         _logger = logger;
       }
 
       [AllowAnonymous]
       [HttpPost("login")]
       public IActionResult LogIn([FromBody] UserAuthInfo login) {
+
+         this.LogInfo("username: " + (login.UserName ?? "") + " | email: " + (login.EmailAddress ?? "") + " | displayname: " + (login.DisplayName ?? ""));
 
          IActionResult response = Unauthorized();
          var user = AuthenticateUser(login);
@@ -76,6 +82,23 @@ namespace CityOfTulsaAPI.Controllers {
          }
 
          return null;
+      }
+
+      private void LogInfo(string? contextInfo = null, string? message = null) {
+
+         if (_logger == null) {
+            return;
+         }
+
+         string? clientIP = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+         _logger.LogInformation(
+            "AuthController"
+            + (string.IsNullOrWhiteSpace(contextInfo) ? "" : "." + contextInfo) + ":"
+            + (string.IsNullOrWhiteSpace(clientIP) ? "" : "client.IP = " + clientIP + ": ")
+            + (message ?? "")
+            , null
+            );
       }
    }
 }

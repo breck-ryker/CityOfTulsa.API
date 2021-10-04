@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Logs\" />
     <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Properties\ServiceDependencies\" />
   </ItemGroup>

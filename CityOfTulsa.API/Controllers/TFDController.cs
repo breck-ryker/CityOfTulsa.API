@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -23,15 +24,18 @@ namespace CityOfTulsaAPI.Controllers {
       private readonly DatabaseContext _dbcontext;
       private readonly IConfiguration _config;
       private readonly AppSettings _appSettings;
+      private readonly ILogger _logger;
 
       public TFDController(
          DatabaseContext dbcontext,
          IConfiguration config,
-         IOptions<AppSettings> appSettings
+         IOptions<AppSettings> appSettings,
+         ILogger<TFDController> logger
       ) {
          _dbcontext = dbcontext;
          _config = config;
          _appSettings = appSettings.Value;
+         _logger = logger;
       }
 
       [HttpGet]
@@ -40,6 +44,8 @@ namespace CityOfTulsaAPI.Controllers {
       [JWTOrApiKeyRequired]
       [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
       public IEnumerable<FireEventHelper> Get() {
+
+         this.LogInfo("Get()");
          
          // just return the most recent n records
          return _dbcontext.FireEvents
@@ -58,7 +64,9 @@ namespace CityOfTulsaAPI.Controllers {
       [JWTOrApiKeyRequired]
       [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Client)]
       // [Route("{id:alpha:minlength(1):maxlength(16)}")] // swagger hates this
-      public FireEventHelper? Get(string id) {
+      public FireEventHelper? GetEventByID(string id) {
+
+         this.LogInfo("Get(id = " + (id ?? "{}") + ")");
 
          return _dbcontext.FireEvents
             .Where(e => e.FireEventID.ToString() == id || e.IncidentNumber == id)
@@ -73,10 +81,12 @@ namespace CityOfTulsaAPI.Controllers {
       //[Authorize]
       [JWTOrApiKeyRequired]
       [ResponseCache(Duration = 300, Location = ResponseCacheLocation.Client)]
-      public IEnumerable<FireEventHelper> Get(
+      public IEnumerable<FireEventHelper> GetEventsByDate(
          string? mindate = null, 
          string? maxdate = null
       ) {
+
+         this.LogInfo("GetEventsByDate(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ")");
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
@@ -107,6 +117,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? stations = null,
          string? vehicles = null
       ) {
+
+         this.LogInfo("GetEvents(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",problems = " + (problems ?? "{}") + ",divisions = " + (divisions ?? "{}") + ",stations=" + (stations ?? "{}") + ",vehicles=" + (vehicles ?? "{}") + ")");
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
@@ -144,6 +156,9 @@ namespace CityOfTulsaAPI.Controllers {
       //[JWTOrApiKeyRequired]
       [ResponseCache(Duration = 720, Location = ResponseCacheLocation.Any)]
       public int GetEventCountMax() {
+         
+         this.LogInfo("GetEventCountMax()");
+
          return _appSettings.EventCountMax;
       }
 
@@ -160,6 +175,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? stations = null,
          string? vehicles = null
       ) {
+
+         this.LogInfo("GetEventCount(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",problems = " + (problems ?? "{}") + ",divisions = " + (divisions ?? "{}") + ",stations=" + (stations ?? "{}") + ",vehicles=" + (vehicles ?? "{}") + ")");
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
@@ -204,6 +221,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? vehicles = null
       ) {
 
+         this.LogInfo("GetProblems(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",divisions = " + (divisions ?? "{}") + ",stations=" + (stations ?? "{}") + ",vehicles=" + (vehicles ?? "{}") + ")");
+
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
          List<string> listDivisions = (string.IsNullOrWhiteSpace(divisions) ? new List<string>() : divisions.Split(',').ToList());
@@ -246,6 +265,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? problems = null
       ) {
 
+         this.LogInfo("GetDivisions(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",problems = " + (problems ?? "{}") + ")");
+
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
          List<string> listProblems = (string.IsNullOrWhiteSpace(problems) ? new List<string>() : problems.Split(',').ToList());
@@ -279,6 +300,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? problems = null,
          string? divisions = null
       ) {
+
+         this.LogInfo("GetStations(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",problems = " + (problems ?? "{}") + ",divisions = " + (divisions ?? "{}") + ")");
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
@@ -318,6 +341,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? divisions = null,
          string? stations = null
       ) {
+
+         this.LogInfo("GetVehicles(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",fireeventids=" + (fireeventids ?? "{}") + ",incidentids=" + (incidentids ?? "{}") + ",problems = " + (problems ?? "{}") + ",divisions = " + (divisions ?? "{}") + ",stations=" + (stations ?? "{}") + ")");
 
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
@@ -366,6 +391,8 @@ namespace CityOfTulsaAPI.Controllers {
          string? stations = null
       ) {
 
+         this.LogInfo("GetVehicleIDs(mindate = " + (mindate ?? "{}") + ",maxdate = " + (maxdate ?? "{}") + ",fireeventids=" + (fireeventids ?? "{}") + ",incidentids=" + (incidentids ?? "{}") + ",problems = " + (problems ?? "{}") + ",divisions = " + (divisions ?? "{}") + ",stations=" + (stations ?? "{}") + ")");
+
          DateTime.TryParse(mindate, out DateTime dtMin);
          DateTime.TryParse(maxdate, out DateTime dtMax);
          List<string> listFireEventIDs = (string.IsNullOrWhiteSpace(fireeventids) ? new List<string>() : fireeventids.Split(',').ToList());
@@ -399,6 +426,23 @@ namespace CityOfTulsaAPI.Controllers {
             .Distinct()
             .Take(1000)
             ;
+      }
+
+      private void LogInfo(string? contextInfo = null, string? message = null) {
+         
+         if (_logger == null) {
+            return;
+         }
+         
+         string? clientIP = HttpContext.Connection.RemoteIpAddress?.ToString();
+
+         _logger.LogInformation(
+            "TFDController" 
+            + (string.IsNullOrWhiteSpace(contextInfo) ? "" : "." + contextInfo) + ":"
+            + (string.IsNullOrWhiteSpace(clientIP) ? "" : "client.IP = " + clientIP + ": ")
+            + (message ?? "")
+            , null
+            );
       }
    }
 }
