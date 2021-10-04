@@ -64,7 +64,8 @@ function ProcessAJAXCallbackResults_TFDSearch(responseData) {
          var returnval = responseData.parameters.returncode;
 
          if (returnval > 0) {
-            $('#show_results').text(returnval + ' Result' + (returnval > 1 ? 's' : ''));
+            $('#show_results1').text(returnval);
+            $('#show_results2').text('Result' + (returnval > 1 ? 's' : ''));
             $('.cot-results-btn').removeClass('cot-hidden');
             $('.cot-noresults-btn').addClass('cot-hidden');
          }

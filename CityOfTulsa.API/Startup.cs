@@ -105,7 +105,7 @@ namespace CityOfTulsa.API {
 
          app.UseAuthorization();
 
-         loggerFactory.AddFile($@"{Directory.GetCurrentDirectory()}\Logs\cot-apilog-" + DateTime.Now.ToString("yyyyMMddDDD") + ".txt");
+         //loggerFactory.AddFile($@"{Directory.GetCurrentDirectory()}\Logs\cot-apilog-" + DateTime.Now.ToString("yyyyMMddDDD") + ".txt");
 
          app.UseEndpoints(endpoints => {
             endpoints.MapControllers();

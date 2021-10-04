@@ -15,26 +15,26 @@ namespace CityOfTulsa.API {
 
       public static void Main(string[] args) {
 
-         Log.Logger = new LoggerConfiguration()
-             .WriteTo.File(
-                 path: "Logs\\autolog-.txt",
-                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
-                 rollingInterval: RollingInterval.Day,
-                 restrictedToMinimumLevel: LogEventLevel.Information
-             ).CreateLogger();
+         //Log.Logger = new LoggerConfiguration()
+         //    .WriteTo.File(
+         //        path: "Logs\\autolog-.txt",
+         //        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+         //        rollingInterval: RollingInterval.Day,
+         //        restrictedToMinimumLevel: LogEventLevel.Information
+         //    ).CreateLogger();
 
-         try {
-            Log.Information("Application is starting");
-            CreateHostBuilder(args).Build().Run();
-         }
-         catch (Exception ex) {
-            Log.Fatal(ex, "Application failed to start");
-         }
-         finally {
-            Log.CloseAndFlush();
-         }
+         //try {
+         //   Log.Information("Application is starting");
+         //   CreateHostBuilder(args).Build().Run();
+         //}
+         //catch (Exception ex) {
+         //   Log.Fatal(ex, "Application failed to start");
+         //}
+         //finally {
+         //   Log.CloseAndFlush();
+         //}
 
-         //CreateHostBuilder(args).Build().Run();
+         CreateHostBuilder(args).Build().Run();
 
          //var host = new HostBuilder()
          //    .ConfigureAppConfiguration((hostContext, builder) => {
