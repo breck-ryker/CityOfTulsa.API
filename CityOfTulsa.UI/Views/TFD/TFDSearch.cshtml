@@ -35,7 +35,7 @@
          </label>
       </div>
 
-      <div id="dateoptions_btngrp" class="btn-group btn-group-toggle float-sm-left align-self-center @(Model.QuerySettings.UseTFDDateFilter ? "" : "cot-hidden")" data-toggle="buttons">
+      <div id="dateoptions_btngrp" class="cot btn-group btn-group-toggle float-sm-left align-self-center @(Model.QuerySettings.UseTFDDateFilter ? "" : "cot-hidden")" data-toggle="buttons">
 
          <label class="btn btn-sm btn-outline-secondary @((Model.QuerySettings.TFDDateFilterType == DateFilterType.OnDate ? "active" : ""))">
             <input type="radio" name="dateoptions" id="date_on" autocomplete="off" value="@((int)CityOfTulsaUI.Models.DateFilterType.OnDate)" @((Model.QuerySettings.TFDDateFilterType == DateFilterType.OnDate ? "checked" : ""))> On
@@ -87,7 +87,7 @@
          </label>
       </div>
 
-      <div id="problemoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDProblemFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-problems" data-actiontarget="problem-chkbox">
+      <div id="problemoptions_btngrp" class="cot btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDProblemFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-problems" data-actiontarget="problem-chkbox">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
@@ -127,7 +127,7 @@
          </label>
       </div>
 
-      <div id="divisionoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDDivisionFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-divisions" data-actiontarget="division-chkbox">
+      <div id="divisionoptions_btngrp" class="cot btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDDivisionFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-divisions" data-actiontarget="division-chkbox">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
@@ -167,7 +167,7 @@
          </label>
       </div>
 
-      <div id="stationoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDStationFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-stations" data-actiontarget="station-chkbox">
+      <div id="stationoptions_btngrp" class="cot btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDStationFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-stations" data-actiontarget="station-chkbox">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
@@ -207,7 +207,7 @@
          </label>
       </div>
 
-      <div id="vehicleoptions_btngrp" class="btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDVehicleFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-vehicles" data-actiontarget="vehicle-chkbox">
+      <div id="vehicleoptions_btngrp" class="cot btn-group cot-selectall-btngrp float-sm-left align-self-center ml-5 @(Model.QuerySettings.UseTFDVehicleFilter ? "" : "cot-hidden")" data-cotcmd="tfd.multi-select-vehicles" data-actiontarget="vehicle-chkbox">
 
          <button class="btn btn-sm btn-outline-secondary" data-action="select-all">Select All</button>
          <button class="btn btn-sm btn-outline-secondary" data-action="unselect-all">Unselect All</button>
@@ -236,8 +236,8 @@
       </ul>
    </div>
 </div>
-<button type="button" data-cotcmd="tfd.run-search" class="cot-search-btn cot-cmd-btn btn-secondary px-2 py-2 d-flex tooltipsterLeft" title="Run this search"><i class="fas fa-search float-left align-self-center" aria-hidden="true"></i><span class="d-none d-sm-block float-left align-self-center">&nbsp;Search</span></button>
+<button type="button" data-cotcmd="tfd.run-search" class="cot-search-btn cot-cmd-btn btn-secondary px-2 py-2 my-0 d-flex tooltipsterLeft" title="Run this search"><i class="fas fa-search float-left align-self-center" aria-hidden="true"></i><span class="d-none d-sm-block float-left align-self-center">&nbsp;Search</span></button>
 
-<a href="/TFD/TFDResults" role="button" class="cot-results-btn btn btn-success blockui px-2 py-2 d-flex cot-hidden tooltipsterLeft" title="View search results"><i class="fas fa-check-circle float-left align-self-center" aria-hidden="true"></i><span id="show_results1" class="pl-1 float-left align-self-center">@(Model.TFDEventsCountResult)</span><span id="show_results2" class="pl-1 d-none d-sm-block float-left align-self-center">Result@((Model.TFDEventsCountResult == 1 ? "" : "s"))</span></a>
+<a href="/TFD/TFDResults" role="button" class="cot-results-btn btn btn-success blockui px-2 py-2 d-flex my-0 cot-hidden tooltipsterLeft" title="View search results"><i class="fas fa-check-circle float-left align-self-center" aria-hidden="true"></i><span id="show_results1" class="pl-1 float-left align-self-center">@(Model.TFDEventsCountResult)</span><span id="show_results2" class="pl-1 d-none d-sm-block float-left align-self-center">Result@((Model.TFDEventsCountResult == 1 ? "" : "s"))</span></a>
 
 <button type="button" data-cotcmd="tfd.no-search-results" class="cot-noresults-btn cot-cmd-btn btn-danger px-2 py-2 d-flex cot-hidden"><i class="fas fa-times-circle float-left align-self-center" aria-hidden="true"></i><span id="no_results" class="pl-1 d-none d-md-block float-left align-self-center">No Results</span></button>

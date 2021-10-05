@@ -27,7 +27,8 @@ header {
 #rowProblemOptions,
 #rowDivisionOptions,
 #rowStationOptions, 
-#rowVehicleOptions {
+#rowVehicleOptions 
+{
    min-height: 32px;
 }
 
@@ -39,6 +40,7 @@ header {
 
 .filteroption-label {
    padding-left:12px;
+   line-height:0.9rem;
 }
 
 .problem-label::before {
@@ -63,4 +65,13 @@ header {
 .btn-group label {
    margin-bottom: 0px;
    cursor: pointer;
+}
+
+.cot.btn-group .btn {
+   padding:0.15rem 0.25rem;
+}
+
+.cot-search-btn,
+.cot-results-btn {
+   z-index:9;
 }
